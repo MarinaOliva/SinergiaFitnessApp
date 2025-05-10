@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ClubDeportivoSinergiaFitness"
+        tools:targetApi="31">
+
+        <!-- Actividad de Login -->
+        <activity
+            android:name="ui.activities.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Actividad del menú principal -->
+        <activity
+            android:name="ui.activities.MenuPrincipalActivity"
+            android:exported="true">
+        </activity>
+
+        <!-- Registrar Cliente -->
+        <activity android:name="ui.activities.RegisterClientActivity" />
+
+        <!-- Usuario -->
+        <activity android:name="ui.activities.UserActivity" />
+
+        <!-- Socio Registrado -->
+        <activity android:name="ui.activities.RegisteredMemberActivity" />
+
+        <!-- Acerca de la App -->
+        <activity android:name="ui.activities.AboutActivity" />
+
+        <!-- Act No Socio -->
+        <activity android:name="ui.activities.NonMemberActivity" />
+
+        <!-- Consultar Cuotas Vencidas -->
+        <activity android:name="ui.activities.CheckOverdueFeesActivity" />
+
+        <!-- Consultar Cuota -->
+        <activity android:name="ui.activities.CheckFeeActivity" />
+
+        <!-- Inscribir Actividades -->
+        <activity android:name="ui.activities.EnrollActivitiesActivity" />
+
+        <!-- Registrar Socio -->
+        <activity android:name="ui.activities.RegisterMemberActivity" />
+
+        <!-- Menú Registro -->
+        <activity android:name="ui.activities.RegistrationActivity" />
+
+        <!-- Pagar Cuota -->
+        <activity android:name="ui.activities.PayFeeActivity" />
+
+        <!-- Imprimir Recibo -->
+        <activity android:name="ui.activities.PrintReceiptActivity" />
+
+
+
+    </application>
+
+</manifest>

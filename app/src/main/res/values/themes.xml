@@ -1,0 +1,8 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.ClubDeportivoSinergiaFitness" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Acá va el codigo para personalizar colores -->
+    </style>
+
+    <style name="Theme.ClubDeportivoSinergiaFitness" parent="Base.Theme.ClubDeportivoSinergiaFitness" />
+</resources>

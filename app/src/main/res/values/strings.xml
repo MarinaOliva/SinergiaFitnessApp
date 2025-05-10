@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">ClubDeportivoSinergiaFitness</string>
+    <string name="logo">Logo Sinergia</string>
+    <string name="menu_hamburguesa">Menú</string>
+    <string name="arrow_back">Volver</string>
+    <string name="open_drawer">Abrir Menú</string>
+    <string name="close_drawer">Cerrar Menú</string>
+</resources>

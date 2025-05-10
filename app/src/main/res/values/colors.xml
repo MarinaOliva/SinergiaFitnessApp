@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="blanco">#FFFFFF</color>
+    <color name="grisClaro">#D9D9D9</color>
+    <color name="titulo_color">#F28322</color>         <!-- Para títulos y texto normal -->
+    <color name="boton_texto_color">#051266</color>
+    <color name="button">#E0DBD5</color><!-- botones grandes-->
+    <color name="boton_cerrar_sesion">#F0AA60</color>
+</resources>
