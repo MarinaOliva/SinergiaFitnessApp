@@ -51,10 +51,12 @@
 
     <Button
         android:id="@+id/loginButton"
-        style="@style/AppButtonText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Ingresar"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="263dp"
+        android:layout_height="65dp"
         android:drawableEnd="@drawable/ic_login"
-        android:backgroundTint="@color/boton_cerrar_sesion"/>
+        android:drawablePadding="1dp"
+        android:gravity="center"
+        android:text="Ingresar"
+        android:textAppearance="@style/PrimaryButtonText" />
 </LinearLayout>

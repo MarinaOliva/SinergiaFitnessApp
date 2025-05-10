@@ -1,146 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="24dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Contenido scrollable -->
+    <ScrollView
+        android:id="@+id/scrollContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnCerrarSesion"
+        android:padding="24dp">
 
-        <!-- Título -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <!-- Título -->
+            <TextView
+                android:id="@+id/tituloMenu"
+                style="@style/AppTitleText"
+                android:text="Menú"
+                android:layout_marginBottom="36dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <!-- Botón: Buscar o registrar cliente -->
+            <LinearLayout
+                android:id="@+id/btnBuscarRegistrar"
+                style="@style/MenuButtonContainer">
+
+                <ImageView
+                    style="@style/MenuButtonIcon"
+                    android:src="@drawable/ic_newuser"
+                    android:layout_marginEnd="14dp"
+                    android:scaleType="centerInside" />
+
+                <TextView
+                    style="@style/MenuButtonText"
+                    android:text="Buscar o \nregistrar cliente"/>
+
+            </LinearLayout>
+
+            <!-- Botón: Abonar cuota -->
+            <LinearLayout
+                android:id="@+id/btnAbonarCuota"
+                style="@style/MenuButtonContainer">
+
+                <ImageView
+                    style="@style/MenuButtonIcon"
+                    android:src="@drawable/ic_card"
+                    android:layout_marginTop="2dp" />
+
+                <TextView
+                    style="@style/MenuButtonText"
+                    android:text="Abonar cuota" />
+
+            </LinearLayout>
+
+            <!-- Botón: Inscribir en actividades guiadas -->
+            <LinearLayout
+                android:id="@+id/btnActividadesGuiadas"
+                style="@style/MenuButtonContainer">
+
+
+                <ImageView
+                    style="@style/MenuButtonIcon"
+                    android:layout_marginTop="2dp"
+                    android:src="@drawable/ic_date" />
+
+                <TextView
+                    style="@style/MenuButtonText"
+                    android:text="Inscribir en \nactividades guiadas" />
+
+            </LinearLayout>
+
+            <!-- Botón: Consultar cuotas vencidas hoy -->
+            <LinearLayout
+                android:id="@+id/btnCuotasVencidas"
+                style="@style/MenuButtonContainer"
+                android:layout_marginBottom="24dp">
+
+                <ImageView
+                    style="@style/MenuButtonIcon"
+                    android:src="@drawable/ic_clock" />
+
+                <TextView
+                    style="@style/MenuButtonText"
+                    android:text="Consultar cuotas \nvencidas hoy"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Botón: Cerrar sesión-->
+    <LinearLayout
+        android:id="@+id/btnCerrarSesion"
+        style="@style/PrimaryButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="42dp">
+
         <TextView
-            android:id="@+id/tituloMenu"
-            style="@style/AppTitleText"
-            android:text="Menú"
-            android:layout_marginBottom="36dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <!-- Botón: Buscar o registrar cliente -->
-        <LinearLayout
-            android:id="@+id/btnBuscarRegistrar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_menu_button"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_newuser"
-                android:layout_marginEnd="14dp"
-                android:scaleType="centerInside" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Buscar o registrar cliente"
-                android:textSize="20sp"
-                android:textColor="@color/boton_texto_color"
-                android:fontFamily="@font/inter" />
-        </LinearLayout>
-
-        <!-- Botón: Abonar cuota -->
-        <LinearLayout
-            android:id="@+id/btnAbonarCuota"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_menu_button"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_card"
-                android:layout_marginTop="2dp"
-                android:layout_marginEnd="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Abonar cuota"
-                android:textSize="20sp"
-                android:textColor="@color/boton_texto_color"
-                android:fontFamily="@font/inter" />
-        </LinearLayout>
-
-        <!-- Botón: Inscribir en actividades guiadas -->
-        <LinearLayout
-            android:id="@+id/btnActividadesGuiadas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_menu_button"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="16dp"
-                android:src="@drawable/ic_date" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Inscribir en actividades guiadas"
-                android:textSize="20sp"
-                android:textColor="@color/boton_texto_color"
-                android:fontFamily="@font/inter" />
-        </LinearLayout>
-
-        <!-- Botón: Consultar cuotas vencidas hoy -->
-        <LinearLayout
-            android:id="@+id/btnCuotasVencidas"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_menu_button"
-            android:padding="12dp"
-            android:layout_marginBottom="24dp"
-            android:gravity="center_vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
-                android:src="@drawable/ic_clock"
-                android:layout_marginEnd="16dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Consultar cuotas vencidas hoy"
-                android:textSize="20sp"
-                android:textColor="@color/boton_texto_color"
-                android:fontFamily="@font/inter" />
-        </LinearLayout>
-
-        <!-- Botón: Cerrar sesión -->
-        <Button
-            android:id="@+id/btnCerrarSesion"
-            style="@style/CerrarSesionButtonStyle"
-            android:background="@drawable/bg_menu_button"
-            android:drawableEnd="@drawable/ic_lock"
+            style="@style/PrimaryButtonText"
             android:text="Cerrar Sesión" />
 
+        <ImageView
+            style="@style/CerrarSesionIcon"
+            android:src="@drawable/ic_lock" />
     </LinearLayout>
-</ScrollView>
+
+</RelativeLayout>
