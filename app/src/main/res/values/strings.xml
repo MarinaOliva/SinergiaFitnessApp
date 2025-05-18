@@ -5,4 +5,32 @@
     <string name="arrow_back">Volver</string>
     <string name="open_drawer">Abrir Menú</string>
     <string name="close_drawer">Cerrar Menú</string>
+
+    <string-array name="actividades_array">
+        <item>Seleccione actividad...</item>
+        <item>Aikido</item>
+        <item>Yoga</item>
+        <item>Pilates</item>
+        <item>Zumba</item>
+        <item>Tela</item>
+        <item>Musculación y Aparatos</item>
+        <item>Natación</item>
+    </string-array>
+
+    <string-array name="montos_array">
+        <item>Monto a abonar...</item>
+        <item>$1500</item>
+        <item>$2000</item>
+        <item>$2500</item>
+        <item>$3000</item>
+        <item>$3500</item>
+    </string-array>
+
+    <string-array name="tipo_documento_array">
+        <item>Tipo de doc...</item>
+        <item>DNI</item>
+        <item>Cédula de identidad</item>
+        <item>Pasaporte</item>
+    </string-array>
+
 </resources>
