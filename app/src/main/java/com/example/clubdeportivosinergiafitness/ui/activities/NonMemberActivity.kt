@@ -12,6 +12,8 @@ import androidx.core.content.ContextCompat
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.R
 import com.example.clubdeportivosinergiafitness.databinding.ActivityNonMemberBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class NonMemberActivity : BaseActivity() {
 
@@ -38,7 +40,7 @@ class NonMemberActivity : BaseActivity() {
             items
         ) {
             override fun isEnabled(position: Int): Boolean {
-                // Deshabilita la primera opción
+                // Deshabilita la primera opción (hint)
                 return position != 0
             }
 
@@ -47,7 +49,6 @@ class NonMemberActivity : BaseActivity() {
                 val textView = view.findViewById<TextView>(R.id.spinner_text)
                 textView.text = getItem(position)
 
-                // Si es el ítem deshabilitado, muestra hint color
                 val colorRes = if (position == 0) R.color.hint_color else android.R.color.black
                 textView.setTextColor(ContextCompat.getColor(context, colorRes))
 
@@ -59,7 +60,6 @@ class NonMemberActivity : BaseActivity() {
                 val textView = view.findViewById<TextView>(R.id.spinner_text)
                 textView.text = getItem(position)
 
-                // Si es el ítem deshabilitado, muestra hint color
                 val colorRes = if (position == 0) R.color.hint_color else android.R.color.black
                 textView.setTextColor(ContextCompat.getColor(context, colorRes))
 
@@ -80,7 +80,29 @@ class NonMemberActivity : BaseActivity() {
         }
 
         binding.btnPagar.setOnClickListener {
-            val intent = Intent(this, PrintReceiptActivity::class.java)
+            // Obtener datos ingresados
+            val nombre = binding.editNombre?.text?.toString()?.trim() ?: ""
+            val apellido = binding.editApellido?.text?.toString()?.trim() ?: ""
+            val nombreCompleto = "$nombre $apellido".trim()
+
+            val dni = binding.editNumeroDocumento?.text?.toString()?.trim() ?: "Sin DNI"
+
+
+            val montoStr = binding.spinnerMonto.selectedItem.toString()
+
+
+            val monto = montoStr.replace("[^\\d.]".toRegex(), "").toDoubleOrNull() ?: 0.0
+
+            val fechaPago = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date())
+            val numeroRecibo = "REC-${System.currentTimeMillis()}" // número único simulado
+
+            val intent = Intent(this, PrintReceiptActivity::class.java).apply {
+                putExtra("nombre", nombreCompleto)
+                putExtra("dni", dni)
+                putExtra("monto", monto)
+                putExtra("fechaPago", fechaPago)
+                putExtra("numeroRecibo", numeroRecibo)
+            }
             startActivity(intent)
         }
     }
