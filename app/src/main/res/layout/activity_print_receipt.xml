@@ -92,7 +92,7 @@
 
     <!-- Botón Imprimir -->
     <Button
-        android:id="@+id/btnImrpimir"
+        android:id="@+id/btnImprimir"
         style="@style/PrimaryButtonStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

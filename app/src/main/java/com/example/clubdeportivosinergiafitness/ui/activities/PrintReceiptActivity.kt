@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.databinding.ActivityPrintReceiptBinding
-import com.example.clubdeportivosinergiafitness.data.Recibo
+
 
 class PrintReceiptActivity : BaseActivity() {
 
@@ -31,7 +31,7 @@ class PrintReceiptActivity : BaseActivity() {
 
         // Botón de imprimir
         // TODO: Implementar la lógica para imprimir el recibo o guardar imagen
-        binding.btnImrpimir.setOnClickListener {
+        binding.btnImprimir.setOnClickListener {
             Toast.makeText(this, "Funcionalidad próximamente", Toast.LENGTH_SHORT).show()
         }
     }
