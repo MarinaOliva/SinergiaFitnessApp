@@ -1,4 +1,4 @@
-package ui.activities
+package com.example.clubdeportivosinergiafitness.ui.activities
 
 import android.content.Intent
 import android.os.Bundle

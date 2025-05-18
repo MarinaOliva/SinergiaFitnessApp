@@ -1,4 +1,4 @@
-package ui.activities
+package com.example.clubdeportivosinergiafitness.ui.activities
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge

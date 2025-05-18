@@ -10,9 +10,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.core.view.GravityCompat
 import android.content.Intent
 import android.widget.Toast
-import ui.activities.UserActivity
-import ui.activities.AboutActivity
-import ui.activities.LoginActivity
+import com.example.clubdeportivosinergiafitness.ui.activities.UserActivity
+import com.example.clubdeportivosinergiafitness.ui.activities.AboutActivity
+import com.example.clubdeportivosinergiafitness.ui.activities.LoginActivity
 
 
 open class BaseActivity : AppCompatActivity() {

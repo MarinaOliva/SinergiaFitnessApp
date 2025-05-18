@@ -1,12 +1,12 @@
-package ui.activities
+package com.example.clubdeportivosinergiafitness.ui.activities
 
 import android.os.Bundle
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.R
 
-class PrintReceiptActivity : BaseActivity() {
+class RegisteredMemberActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_print_receipt)
+        setContentView(R.layout.activity_registered_member)
     }
 }
