@@ -23,7 +23,7 @@ class MenuPrincipalActivity : BaseActivity() {
         }
 
         binding.btnAbonarCuota.setOnClickListener {
-            val intent = Intent(this, PayFeeActivity::class.java)
+            val intent = Intent(this, CheckFeeActivity::class.java)
             startActivity(intent)
         }
 
