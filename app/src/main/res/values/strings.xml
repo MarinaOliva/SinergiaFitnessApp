@@ -5,6 +5,11 @@
     <string name="arrow_back">Volver</string>
     <string name="open_drawer">Abrir Menú</string>
     <string name="close_drawer">Cerrar Menú</string>
+    <string name="info_screen_title">Información de la aplicación</string>
+    <string name="app_version_label">Versión:</string>
+    <string name="app_version_number">1.1.22.47</string>
+    <string name="la_vers_n_m_s_reciente_ya_est_instalada">La versíón más reciente ya está instalada</string>
+    <string name="perfil_de_usuario">Perfil de usuario</string>
 
     <string-array name="actividades_array">
         <item>Seleccione actividad...</item>
