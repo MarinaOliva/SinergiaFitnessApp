@@ -3,8 +3,117 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:padding="16dp">
 
+
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/buscar_o_registrar_cliente"
+        android:textAppearance="@style/AppTitleText"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
+
+
+    <TextView
+        android:id="@+id/tvTipoDocumento"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tipo_de_documento"
+        android:paddingLeft="55dp"
+        android:textColor="#FFA500"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="24dp"/>
+
+    <LinearLayout
+        android:id="@+id/layoutTipoDocumento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTipoDocumento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/icDocumento"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_doc"
+            android:layout_marginEnd="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerTipoDocumento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/tipo_documento_array" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutNumeroDocumento"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/layoutTipoDocumento"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:id="@+id/icNumeroDocumento"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_id"
+            android:contentDescription="@string/cono_n_mero_documento"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/etNumeroDocumento"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
+            android:hint="Número de documento"
+            android:inputType="number"
+            android:background="@drawable/edit_text_layer"
+            android:paddingStart="16dp"
+            android:textColorHint="@color/hint_color"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvInfoRegistro"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:text="@string/verificaremos_si_ya_est_registrado_en_el_sistema"
+        android:textAlignment="center"
+        android:textColor="#FFA500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layoutNumeroDocumento" />
+
+    <Button
+        android:id="@+id/btnConsultar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        style="@style/PrimaryButtonStyle"
+        android:textAppearance="@style/PrimaryButtonText"
+        android:text="@string/consultar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvInfoRegistro" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
