@@ -7,22 +7,188 @@
     android:background="@drawable/background_gradient">
 
 
+    <Button
+        android:id="@+id/btn_Inscribir"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:text="Inscribir"
+        android:textAppearance="@style/PrimaryButtonText"
+        app:layout_constraintEnd_toStartOf="@+id/btn_Cancelar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="770dp" />
+
+    <Button
+        android:id="@+id/btn_Cancelar"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="48dp"
+        android:text="Cancelar"
+        android:textAppearance="@style/PrimaryButtonText"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:layout_editor_absoluteY="770dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Tela"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:gravity="center|center_horizontal"
+        android:shadowColor="@color/hint_color"
+        android:text="Tela"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="238dp"
+        tools:layout_editor_absoluteY="509dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Yoga"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:gravity="center|center_horizontal"
+        android:shadowColor="@color/hint_color"
+        android:text="Yoga"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="238dp"
+        tools:layout_editor_absoluteY="452dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Zumba"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:gravity="center|center_horizontal"
+        android:shadowColor="@color/hint_color"
+        android:text="Zumba"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="31dp"
+        tools:layout_editor_absoluteY="564dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Pilates"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:gravity="center|center_horizontal"
+        android:shadowColor="@color/hint_color"
+        android:text="Pilates"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="509dp" />
+
     <LinearLayout
         android:id="@+id/ll_Options"
-        android:layout_width="408dp"
-        android:layout_height="90dp"
+        android:layout_width="406dp"
+        android:layout_height="68dp"
         android:orientation="horizontal"
+        android:padding="8dp"
         tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="0dp">
+        tools:layout_editor_absoluteY="29dp">
 
         <ImageButton
             android:id="@+id/btnMenu"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:background="@android:color/transparent"
             android:contentDescription="@string/menu_hamburguesa"
             android:padding="8dp"
             android:src="@drawable/ic_hamb" />
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="270dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/arrow_back"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_return"
+            android:textAlignment="viewEnd"
+            android:verticalScrollbarPosition="left" />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_InscribirActividad"
+        style="@style/AppTitleText"
+        android:layout_width="374dp"
+        android:layout_height="91dp"
+        android:layout_marginTop="40dp"
+        android:text="Inscribir a un socio en las actividades guiadas"
+        android:textAlignment="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ll_Options"
+        tools:ignore="TextSizeCheck" />
+
+    <TextView
+        android:id="@+id/tv_IngresSocio"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:text="Ingrese el N° de Socio:"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_InscribirActividad" />
+
+    <EditText
+        android:id="@+id/etnp_NSocio"
+        android:layout_width="217dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/bg_receipt_info"
+        android:ems="10"
+        android:inputType="numberPassword"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_IngresSocio" />
+
+    <TextView
+        android:id="@+id/tv_SelectionActivity"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:text="Seleccioe hasta 3 actividades"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.426"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etnp_NSocio" />
+
+    <RadioButton
+        android:id="@+id/rb_Aikido"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:gravity="center|center_horizontal"
+        android:shadowColor="@color/hint_color"
+        android:text="Aikido"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        tools:layout_editor_absoluteX="36dp"
+        tools:layout_editor_absoluteY="452dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
