@@ -3,6 +3,29 @@
     android:height="29dp"
     android:viewportWidth="29"
     android:viewportHeight="29">
+
+  <!-- Sombra -->
+  <group
+      android:translateX="1"
+      android:translateY="1"
+      android:alpha="0.25">
+    <path
+        android:pathData="M7.854,4.833L3.625,8.458L7.854,12.688"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:strokeColor="#55000000"
+        android:strokeLineCap="round"/>
+    <path
+        android:pathData="M3.625,8.458H17.517C21.676,8.458 25.207,11.854 25.369,16.01C25.541,20.403 21.911,24.167 17.517,24.167H7.249"
+        android:strokeLineJoin="round"
+        android:strokeWidth="2"
+        android:fillColor="#00000000"
+        android:strokeColor="#55000000"
+        android:strokeLineCap="round"/>
+  </group>
+
+  <!-- Vector original -->
   <path
       android:pathData="M7.854,4.833L3.625,8.458L7.854,12.688"
       android:strokeLineJoin="round"
