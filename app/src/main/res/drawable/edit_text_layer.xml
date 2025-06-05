@@ -1,0 +1,24 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Sombra difuminada -->
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Negro semi-transparente a totalmente transparente -->
+            <gradient
+                android:startColor="#80000000"
+                android:endColor="#00000000"
+                android:angle="90"/>
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+    <!-- Contenido principal -->
+    <item android:left="3dp" android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/blanco"/>
+            <stroke android:width="2dp" android:color="@color/titulo_color"/>
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+
+</layer-list>

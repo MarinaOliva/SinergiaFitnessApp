@@ -1,9 +1,214 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-android:layout_width="match_parent"
-android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
+        <Button
+            android:id="@+id/btn_Cambiar"
+            style="@style/PrimaryButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="80dp"
+            android:text="Cambiar"
+            android:textAppearance="@style/PrimaryButtonText"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_RepitPass" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/tvPerfil_Usuario"
+            style="@style/AppTitleText"
+            android:layout_width="374dp"
+            android:layout_height="91dp"
+            android:layout_marginTop="48dp"
+            android:text="@string/perfil_de_usuario"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.727"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnBack"
+            tools:ignore="TextSizeCheck" />
+
+        <TableRow
+            android:id="@+id/tr_Name_User"
+            android:layout_width="282dp"
+            android:layout_height="49dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvPerfil_Usuario">
+
+            <ImageView
+                android:id="@+id/iv_iconoUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:contentDescription="Ícono usuario"
+                android:src="@drawable/ic_user" />
+
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="199dp"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Nombre y apellido"
+                android:textColor="@color/button"
+                android:textColorHighlight="@color/blanco"
+                android:textColorHint="@color/blanco"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tr_email"
+            android:layout_width="284dp"
+            android:layout_height="51dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginTop="20dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tr_Name_User">
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                app:srcCompat="@drawable/ic_mail" />
+
+            <EditText
+                android:id="@+id/et_mail"
+                android:layout_width="208dp"
+                android:layout_height="match_parent"
+                android:ems="10"
+                android:inputType="text"
+                android:text="gomez@gmail.com"
+                android:textColor="@color/blanco"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <TextView
+            android:id="@+id/tv_Cambiar_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Cambiar contraseña"
+            android:textAlignment="textEnd"
+            android:textColor="@color/blanco"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintTop_toBottomOf="@+id/tr_email"
+            tools:layout_editor_absoluteX="52dp" />
+
+        <TableRow
+            android:id="@+id/tr_Pass"
+            android:layout_width="318dp"
+            android:layout_height="65dp"
+            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_Cambiar_pass">
+
+            <ImageView
+                android:id="@+id/iv_Key"
+                android:layout_width="wrap_content"
+                android:layout_height="47dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                android:scrollbarFadeDuration="250"
+                app:srcCompat="@drawable/ic_key" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/edit_text_layer"
+                android:paddingStart="16dp"
+                android:text="   Contraseña actual"
+                android:textAlignment="viewStart"
+                android:textColor="@color/hint_color"
+                android:textColorHint="@color/hint_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <LinearLayout
+            android:id="@+id/ll_NewPass"
+            android:layout_width="318dp"
+            android:layout_height="63dp"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tr_Pass">
+
+            <ImageView
+                android:id="@+id/iv_PassNewRep"
+                android:layout_width="47dp"
+                android:layout_height="46dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                app:srcCompat="@drawable/ic_newpass" />
+
+            <EditText
+                android:id="@+id/et_NewPass"
+                android:layout_width="236dp"
+                android:layout_height="49dp"
+                android:background="@drawable/edit_text_layer"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Nueva contraseña"
+                android:textAlignment="textStart"
+                android:textColor="@color/hint_color"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_RepitPass"
+            android:layout_width="321dp"
+            android:layout_height="63dp"
+            android:layout_margin="16dp"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_NewPass">
+
+            <ImageView
+                android:id="@+id/iv_PassNewRep2"
+                android:layout_width="47dp"
+                android:layout_height="47dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="8dp"
+                app:srcCompat="@drawable/ic_newpass" />
+
+            <EditText
+                android:id="@+id/et_PassConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/edit_text_layer"
+                android:ems="10"
+                android:inputType="text"
+                android:padding="8dp"
+                android:text="Repetir nuevamente contraseña"
+                android:textColor="@color/hint_color"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

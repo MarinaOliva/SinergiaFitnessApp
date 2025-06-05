@@ -31,3 +31,4 @@ iconics-mdi = { module = "com.mikepenz:iconics-type-materialdesign", version.ref
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 
+

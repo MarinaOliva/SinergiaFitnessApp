@@ -6,4 +6,6 @@
     <color name="boton_texto_color">#051266</color>
     <color name="button">#E0DBD5</color><!-- botones grandes-->
     <color name="boton_cerrar_sesion">#F0AA60</color>
+    <color name="hint_color">#838181</color>
+    <color name="shadow_color">#40000000</color>
 </resources>

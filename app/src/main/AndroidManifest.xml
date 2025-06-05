@@ -15,7 +15,7 @@
 
         <!-- Actividad de Login -->
         <activity
-            android:name="ui.activities.LoginActivity"
+            android:name=".ui.activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,45 +25,45 @@
 
         <!-- Actividad del menú principal -->
         <activity
-            android:name="ui.activities.MenuPrincipalActivity"
+            android:name=".ui.activities.MenuPrincipalActivity"
             android:exported="true">
         </activity>
 
         <!-- Registrar Cliente -->
-        <activity android:name="ui.activities.RegisterClientActivity" />
+        <activity android:name=".ui.activities.RegisterClientActivity" />
 
         <!-- Usuario -->
-        <activity android:name="ui.activities.UserActivity" />
+        <activity android:name=".ui.activities.UserActivity" />
 
         <!-- Socio Registrado -->
-        <activity android:name="ui.activities.RegisteredMemberActivity" />
+        <activity android:name=".ui.activities.RegisteredMemberActivity" />
 
         <!-- Acerca de la App -->
-        <activity android:name="ui.activities.AboutActivity" />
+        <activity android:name=".ui.activities.AboutActivity" />
 
         <!-- Act No Socio -->
-        <activity android:name="ui.activities.NonMemberActivity" />
+        <activity android:name=".ui.activities.NonMemberActivity" />
 
         <!-- Consultar Cuotas Vencidas -->
-        <activity android:name="ui.activities.CheckOverdueFeesActivity" />
+        <activity android:name=".ui.activities.CheckOverdueFeesActivity" />
 
         <!-- Consultar Cuota -->
-        <activity android:name="ui.activities.CheckFeeActivity" />
+        <activity android:name=".ui.activities.CheckFeeActivity" />
 
         <!-- Inscribir Actividades -->
-        <activity android:name="ui.activities.EnrollActivitiesActivity" />
+        <activity android:name=".ui.activities.EnrollActivitiesActivity" />
 
         <!-- Registrar Socio -->
-        <activity android:name="ui.activities.RegisterMemberActivity" />
+        <activity android:name=".ui.activities.RegisterMemberActivity" />
 
         <!-- Menú Registro -->
-        <activity android:name="ui.activities.RegistrationActivity" />
+        <activity android:name=".ui.activities.RegistrationActivity" />
 
         <!-- Pagar Cuota -->
-        <activity android:name="ui.activities.PayFeeActivity" />
+        <activity android:name=".ui.activities.PayFeeActivity" />
 
         <!-- Imprimir Recibo -->
-        <activity android:name="ui.activities.PrintReceiptActivity" />
+        <activity android:name=".ui.activities.PrintReceiptActivity" />
 
 
 

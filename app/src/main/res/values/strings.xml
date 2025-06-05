@@ -1,8 +1,55 @@
 <resources>
-    <string name="app_name">ClubDeportivoSinergiaFitness</string>
     <string name="logo">Logo Sinergia</string>
     <string name="menu_hamburguesa">Menú</string>
     <string name="arrow_back">Volver</string>
     <string name="open_drawer">Abrir Menú</string>
     <string name="close_drawer">Cerrar Menú</string>
+    <string name="info_screen_title">Información de la aplicación</string>
+    <string name="app_version_label">Versión:</string>
+    <string name="app_version_number">1.1.22.47</string>
+    <string name="la_vers_n_m_s_reciente_ya_est_instalada">La versíón más reciente ya está instalada</string>
+    <string name="perfil_de_usuario">Perfil de usuario</string>
+
+    <string-array name="actividades_array">
+        <item>Seleccione actividad...</item>
+        <item>Aikido</item>
+        <item>Yoga</item>
+        <item>Pilates</item>
+        <item>Zumba</item>
+        <item>Tela</item>
+        <item>Musculación y Aparatos</item>
+        <item>Natación</item>
+    </string-array>
+
+    <string-array name="montos_array">
+        <item>Monto a abonar...</item>
+        <item>$1500</item>
+        <item>$2000</item>
+        <item>$2500</item>
+        <item>$3000</item>
+        <item>$3500</item>
+    </string-array>
+
+    <string-array name="tipo_documento_array">
+        <item>Tipo de doc...</item>
+        <item>DNI</item>
+        <item>Cédula de identidad</item>
+        <item>Pasaporte</item>
+
+    </string-array>
+    <string name="app_name">SinergiaApp</string>
+    <string name="registrar_nuevo_socio">Registrar nuevo socio</string>
+    <string name="icono_persona" />
+    <string name="apellido">Apellido</string>
+    <string name="n_mero_de_documento">Número de documento</string>
+    <string name="cono_de_carnet">Ícono de carnet</string>
+    <string name="icono_de_carnet" />
+    <string name="tel_fono">Teléfono</string>
+    <string name="presenta_apto_f_sico">¿Presenta apto físico?</string>
+    <string name="qu_acci_n_desea_realizar">¿Qué acción desea realizar?</string>
+    <string name="buscar_o_registrar_cliente">Buscar o registrar cliente</string>
+    <string name="tipo_de_documento">Tipo de documento</string>
+    <string name="cono_n_mero_documento">Ícono número documento</string>
+    <string name="verificaremos_si_ya_est_registrado_en_el_sistema">Verificaremos si ya está registrado en el sistema</string>
+    <string name="consultar">Consultar</string>
 </resources>

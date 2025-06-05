@@ -1,9 +1,172 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:id="@+id/ll_Options"
+        android:layout_width="0dp"
+        android:layout_height="68dp"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_InscribirActividad"
+        style="@style/AppTitleText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Inscribir a un socio en las actividades guiadas"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/ll_Options"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_IngresSocio"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Ingrese el N° de Socio:"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_InscribirActividad"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <EditText
+        android:id="@+id/etnp_NSocio"
+        android:layout_width="217dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/bg_receipt_info"
+        android:ems="10"
+        android:textColor="#000000"
+        android:inputType="numberPassword"
+        app:layout_constraintTop_toBottomOf="@id/tv_IngresSocio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_SelectionActivity"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Seleccione hasta 3 actividades"
+        android:textSize="18sp"
+        app:layout_constraintTop_toBottomOf="@id/etnp_NSocio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Primera fila de RadioButtons -->
+    <RadioButton
+        android:id="@+id/rb_Aikido"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:text="Aikido"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Yoga"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:text="Yoga"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity"
+        app:layout_constraintStart_toEndOf="@id/rb_Aikido"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp" />
+
+    <!-- Segunda fila de RadioButtons -->
+    <RadioButton
+        android:id="@+id/rb_Pilates"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:text="Pilates"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/rb_Aikido"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp" />
+
+    <RadioButton
+        android:id="@+id/rb_Tela"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:text="Tela"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/rb_Yoga"
+        app:layout_constraintStart_toEndOf="@id/rb_Pilates"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp" />
+
+    <!-- Tercera fila de RadioButtons -->
+    <RadioButton
+        android:id="@+id/rb_Zumba"
+        style="@style/AppTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/blanco"
+        android:buttonTint="@color/blanco"
+        android:text="Zumba"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/rb_Pilates"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp" />
+
+    <!-- Botones de acción al pie -->
+    <Button
+        android:id="@+id/btn_Inscribir"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Inscribir"
+        android:textAppearance="@style/PrimaryButtonText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="32dp" />
+
+    <Button
+        android:id="@+id/btn_Cancelar"
+        style="@style/PrimaryButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Cancelar"
+        android:textAppearance="@style/PrimaryButtonText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="48dp"
+        android:layout_marginBottom="32dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

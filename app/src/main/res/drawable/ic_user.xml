@@ -3,6 +3,21 @@
     android:height="50dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+
+  <!-- Sombra -->
+  <group
+      android:translateX="1"
+      android:translateY="1"
+      android:alpha="0.25">
+    <path
+        android:pathData="M12,6m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
+        android:fillColor="#55000000"/>
+    <path
+        android:pathData="M20,17.5C20,19.985 20,22 12,22C4,22 4,19.985 4,17.5C4,15.015 7.582,13 12,13C16.418,13 20,15.015 20,17.5Z"
+        android:fillColor="#55000000"/>
+  </group>
+
+  <!-- Vector original -->
   <path
       android:pathData="M12,6m-4,0a4,4 0,1 1,8 0a4,4 0,1 1,-8 0"
       android:fillColor="#F28322"/>
