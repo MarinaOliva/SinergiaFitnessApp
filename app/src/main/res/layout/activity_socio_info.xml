@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Título -->
+    <TextView
+        android:id="@+id/tvTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Información del Socio"
+        android:textAppearance="@style/AppTitleText"
+        android:gravity="center"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Datos personales -->
+    <TextView
+        android:id="@+id/tvDatosSocio"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Nombre Apellido - DNI 12345678"
+        android:textAppearance="@style/AppBodyText"
+        android:textAlignment="center"
+        app:layout_constraintTop_toBottomOf="@id/tvTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Estado de cuota -->
+    <TextView
+        android:id="@+id/tvEstadoCuota"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Última cuota: PAGADA"
+        android:textAppearance="@style/AppBodyText"
+        android:textAlignment="center"
+        android:layout_marginTop="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvDatosSocio"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Lista de actividades -->
+    <TextView
+        android:id="@+id/tvActividadesTitulo"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Actividades:"
+        android:textAppearance="@style/AppBodyText"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/tvEstadoCuota"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvActividades"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="• Fútbol\n• Yoga\n• Natación"
+        android:textAppearance="@style/AppBodyText"
+        android:textAlignment="center"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvActividadesTitulo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Botón Ver Carnet -->
+    <Button
+        android:id="@+id/btnVerCarnet"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Ver Carnet"
+        style="@style/PrimaryButtonStyle"
+        android:textAppearance="@style/PrimaryButtonText"
+        android:layout_marginTop="32dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintTop_toBottomOf="@id/tvActividades"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Botón Salir -->
+    <Button
+        android:id="@+id/btnSalir"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Salir"
+        style="@style/PrimaryButtonStyle"
+        android:textAppearance="@style/PrimaryButtonText"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="24dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        app:layout_constraintTop_toBottomOf="@id/btnVerCarnet"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

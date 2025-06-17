@@ -3,29 +3,33 @@ package com.example.clubdeportivosinergiafitness.data
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import android.content.ContentValues
+import android.util.Log
+
+
 
 class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL("""
-            CREATE TABLE Cliente (
-                clienteID INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL,
-                apellido TEXT NOT NULL,
-                tipoDoc TEXT,
-                numDoc INTEGER,
-                telefono INTEGER,
-                email TEXT,
-                presentaAptoFisico INTEGER
-            );
-        """.trimIndent())
+        CREATE TABLE Cliente (
+            clienteID INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre TEXT NOT NULL,
+            apellido TEXT NOT NULL,
+            tipoDoc TEXT,
+            numDoc INTEGER
+        );
+    """.trimIndent())
 
         db.execSQL("""
             CREATE TABLE Socio (
-                socioID INTEGER PRIMARY KEY AUTOINCREMENT,
-                clienteID INTEGER,
-                FOREIGN KEY (clienteID) REFERENCES Cliente(clienteID)
-            );
+            socioID INTEGER PRIMARY KEY AUTOINCREMENT,
+            clienteID INTEGER,
+            telefono INTEGER,
+            email TEXT,
+            presentaAptoFisico INTEGER,
+            FOREIGN KEY (clienteID) REFERENCES Cliente(clienteID)
+        );
         """.trimIndent())
 
         db.execSQL("""
@@ -81,20 +85,32 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     private fun insertarDatosIniciales(db: SQLiteDatabase) {
         // Insertar Clientes
         db.execSQL("""
-            INSERT INTO Cliente (nombre, apellido, tipoDoc, numDoc, telefono, email, presentaAptoFisico) VALUES
-            ('Martín', 'Aliaga', 'DNI', 12345678, 11223344, 'martin.gonzalez@yahoo.com', 1),
-            ('Lucía', 'López', 'DNI', 87654321, 22334455, 'lucia.lopez@gmail.com', 1),
-            ('Pedro', 'Fernández', 'DNI', 13579246, 45566778, 'pedro.fernandez@hotmail.com', 0),
-            ('Sofía', 'Martínez', 'DNI', 24681357, 56677899, 'sofia.martinez@live.com', 1),
-            ('Javier', 'Andino', 'DNI', 98765432, 67788900, 'javier.perez@outlook.com', 0),
-            ('Carlos', 'Ramírez', 'DNI', 15975384, 78899001, 'carlos.ramirez@gmail.com', 1),
-            ('Ana', 'García', 'DNI', 75315986, 99001122, 'ana.garcia@yahoo.com', 1),
-            ('Miguel', 'Torres', 'DNI', 85236914, 90011222, 'miguel.torres@hotmail.com', 1);
+           INSERT INTO Cliente (nombre, apellido, tipoDoc, numDoc) VALUES
+        ('Martín', 'Aliaga', 'DNI', 12345678),
+        ('Lucía', 'López', 'DNI', 87654321),
+        ('Pedro', 'Fernández', 'DNI', 13579246),
+        ('Sofía', 'Martínez', 'DNI', 24681357),
+        ('Javier', 'Andino', 'DNI', 98765432),
+        ('Carlos', 'Ramírez', 'DNI', 15975384),
+        ('Ana', 'García', 'DNI', 75315986),
+        ('Miguel', 'Torres', 'DNI', 85236914);
         """.trimIndent())
 
-        // Insertar Socios y No Socios (clienteID de 1 a 8)
-        db.execSQL("INSERT INTO Socio (clienteID) VALUES (1), (2), (4), (6), (7), (8);")
-        db.execSQL("INSERT INTO NoSocio (clienteID) VALUES (3), (5);")
+        // Insertar Socios
+        db.execSQL("""
+        INSERT INTO Socio (clienteID, telefono, email, presentaAptoFisico) VALUES
+        (1, 11223344, 'martin.gonzalez@yahoo.com', 1),
+        (2, 22334455, 'lucia.lopez@gmail.com', 1),
+        (4, 56677899, 'sofia.martinez@live.com', 1),
+        (6, 78899001, 'carlos.ramirez@gmail.com', 1),
+        (7, 99001122, 'ana.garcia@yahoo.com', 1),
+        (8, 90011222, 'miguel.torres@hotmail.com', 1);
+    """.trimIndent())
+
+        // Insertar No Socios
+        db.execSQL("""
+        INSERT INTO NoSocio (clienteID) VALUES (3), (5);
+    """.trimIndent())
 
         // Insertar Actividades
         db.execSQL("""
@@ -111,11 +127,12 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         // Insertar Cuotas
         db.execSQL("""
             INSERT INTO Cuota (socioID, fechaVencimiento, fechaPago, importe) VALUES
-            (1, '2024-10-31', '2024-10-31', 23000.00),
-            (2, '2024-10-15', '2024-10-14', 23000.00),
-            (4, '2024-10-28', NULL, 23000.00),
-            (5, '2024-10-20', NULL, 23000.00),
-            (6, '2024-10-25', '2024-10-25', 23000.00);
+            (1, '2025-07-31', '2024-10-31', 33000.00),
+            (2, '2025-07-15', '2024-10-14', 33000.00),
+            (3, '2025-07-15', '2024-10-14', 33000.00),            
+            (4, '2025-07-28', NULL, 33000.00),
+            (5, '2025-07-20', NULL, 33000.00),
+            (6, '2025-07-25', '2024-10-25', 33000.00);
         """.trimIndent())
 
         // Insertar Administradores
@@ -149,7 +166,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         onCreate(db)
     }
 
-    // función para login
+    // FUNCION LOGIN
     fun login(nombreUsuario: String, contrasena: String): Boolean {
         val db = this.readableDatabase
         val query = """
@@ -163,6 +180,157 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
 
         return tieneUsuarioValido
+    }
+
+    // FUNCION PARA OBTENER EL ID DEL CLIENTE
+    fun obtenerClienteID(numDoc: Int): Long? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT clienteID FROM Cliente WHERE numDoc = ?", arrayOf(numDoc.toString()))
+        val clienteID = if (cursor.moveToFirst()) cursor.getLong(0) else null
+        cursor.close()
+        return clienteID
+    }
+
+    // FUNCION PARA SABER SI ES SOCIO
+    fun esSocio(numDoc: Int): Boolean {
+        val db = readableDatabase
+        val query = """
+        SELECT s.socioID 
+        FROM Socio s 
+        JOIN Cliente c ON s.clienteID = c.clienteID 
+        WHERE c.numDoc = ?
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(numDoc.toString()))
+        val esSocio = cursor.count > 0
+        cursor.close()
+        return esSocio
+    }
+
+    // FUNCION PARA CREAR NUEVO SOCIO + CLIENTE
+    fun insertarSocio(
+        nombre: String,
+        apellido: String,
+        tipoDoc: String,
+        numDoc: Int,
+        telefono: Int,
+        email: String,
+        presentaApto: Boolean
+    ): Boolean {
+        val db = writableDatabase
+
+        // Insertar en Cliente
+        val clienteValues = ContentValues().apply {
+            put("nombre", nombre)
+            put("apellido", apellido)
+            put("tipoDoc", tipoDoc)
+            put("numDoc", numDoc)
+        }
+
+        val clienteID = db.insert("Cliente", null, clienteValues)
+        if (clienteID == -1L) return false
+
+        // Insertar en Socio
+        val socioValues = ContentValues().apply {
+            put("clienteID", clienteID)
+            put("telefono", telefono)
+            put("email", email)
+            put("presentaAptoFisico", if (presentaApto) 1 else 0)
+        }
+
+        val socioID = db.insert("Socio", null, socioValues)
+        if (socioID == -1L) {
+            Log.e("DBHelper", "Error al insertar socio para clienteID $clienteID")
+            return false
+        } else {
+            Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
+        }
+
+        return true
+    }
+
+    // FUNCION PARA CONVERTIR CLIENTE NO SOCIO EN SOCIO
+fun asociarClienteComoSocio(numDoc: Int): Boolean {
+    val db = writableDatabase
+
+    // Buscar clienteID con numDoc
+    val cursor = db.rawQuery("SELECT clienteID FROM Cliente WHERE numDoc = ?", arrayOf(numDoc.toString()))
+    if (!cursor.moveToFirst()) {
+        cursor.close()
+        return false // cliente no encontrado
+    }
+    val clienteID = cursor.getLong(0)
+    cursor.close()
+
+    // Insertar en Socio
+    val valores = ContentValues().apply {
+        put("clienteID", clienteID)
+    }
+
+    val resultado = db.insert("Socio", null, valores)
+    return resultado != -1L
+}
+    // FUNCION PARA REGISTRAR NO SOCIO EN UNA ACTIVIDAD
+    fun registrarNoSocioEnActividad(
+        nombre: String,
+        apellido: String,
+        tipoDoc: String,
+        numDoc: Int,
+        idActividad: Int
+    ): Boolean {
+        val db = writableDatabase
+
+        // 1. Buscar si ya existe cliente
+        var clienteID = obtenerClienteID(numDoc)
+
+        // 2. Si no existe, insertarlo
+        if (clienteID == null) {
+            val values = ContentValues().apply {
+                put("nombre", nombre)
+                put("apellido", apellido)
+                put("tipoDoc", tipoDoc)
+                put("numDoc", numDoc)
+            }
+            val newID = db.insert("Cliente", null, values)
+            if (newID == -1L) return false
+            clienteID = newID
+        }
+
+        // 3. Verificar si ya está en NoSocio
+        val cursor = db.rawQuery("SELECT noSocioID FROM NoSocio WHERE clienteID = ?", arrayOf(clienteID.toString()))
+        val yaEsNoSocio = cursor.moveToFirst()
+        cursor.close()
+
+        // 4. Insertar en NoSocio si no está
+        if (!yaEsNoSocio) {
+            val noSocioValues = ContentValues().apply {
+                put("clienteID", clienteID)
+            }
+            val result = db.insert("NoSocio", null, noSocioValues)
+            if (result == -1L) return false
+        }
+
+        // 5. Verificar cupos de la actividad
+        val cupoCursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
+        if (!cupoCursor.moveToFirst()) {
+            cupoCursor.close()
+            return false // Actividad no existe
+        }
+
+        val cupos = cupoCursor.getInt(0)
+        cupoCursor.close()
+
+        if (cupos == 0) return false // No hay cupos
+
+        // 6. Descontar cupo si corresponde (si cupos no es NULL)
+        if (cupos > 0) {
+            db.execSQL(
+                "UPDATE Actividad SET cuposDisponibles = cuposDisponibles - 1 WHERE idActividad = ?",
+                arrayOf(idActividad.toString())
+            )
+        }
+
+        return true
     }
 
 }

@@ -65,6 +65,9 @@
         <!-- Imprimir Recibo -->
         <activity android:name=".ui.activities.PrintReceiptActivity" />
 
+        <!-- Socio Info -->
+        <activity android:name=".ui.activities.SocioInfoActivity" />
+
 
 
     </application>
