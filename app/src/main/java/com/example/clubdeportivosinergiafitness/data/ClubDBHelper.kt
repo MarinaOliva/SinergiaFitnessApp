@@ -6,7 +6,13 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
 import android.util.Log
 
-
+data class SocioDatos(
+    val nombre: String,
+    val apellido: String,
+    val tipoDoc: String,
+    val numDoc: Int,
+    val socioID: Int
+)
 
 class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 1) {
 
@@ -333,5 +339,70 @@ fun asociarClienteComoSocio(numDoc: Int): Boolean {
         return true
     }
 
+    // FUNCION OBTENER DATOS DEL SOCIO
+    fun obtenerDatosSocioPorDocumento(numDoc: Int): SocioDatos? {
+        val db = readableDatabase
+        val query = """
+            SELECT c.nombre, c.apellido, c.tipoDoc, c.numDoc, s.socioID
+            FROM Cliente c
+            JOIN Socio s ON c.clienteID = s.clienteID
+            WHERE c.numDoc = ?
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(numDoc.toString()))
+        val socioDatos = if (cursor.moveToFirst()) {
+            SocioDatos(
+                nombre = cursor.getString(0),
+                apellido = cursor.getString(1),
+                tipoDoc = cursor.getString(2),
+                numDoc = cursor.getInt(3),
+                socioID = cursor.getInt(4)
+            )
+        } else {
+            null
+        }
+        cursor.close()
+        db.close()
+        return socioDatos
+    }
+
+//FUNCION VER ESTADO DE ULTIMA CUOTA
+    fun obtenerEstadoUltimaCuota(socioID: Int): String {
+        val db = readableDatabase
+        val query = "SELECT fechaPago FROM Cuota WHERE socioID = ? ORDER BY fechaVencimiento DESC LIMIT 1"
+        val cursor = db.rawQuery(query, arrayOf(socioID.toString()))
+
+        val estado = if (cursor.moveToFirst()) {
+            val fechaPago = cursor.getString(0)
+            if (fechaPago != null) "Última cuota: PAGADA" else "Última cuota: VENCIDA"
+        } else {
+            "No tiene cuotas registradas"
+        }
+
+        cursor.close()
+        db.close()
+        return estado
+    }
+
+// FUNCION LISTAR ACTIVIDADES DEL SOCIO
+    fun obtenerActividadesDelSocio(socioID: Int): List<String> {
+        val db = readableDatabase
+        val query = """
+            SELECT a.nombreActividad
+            FROM Actividad a
+            JOIN SocioActividad sa ON a.idActividad = sa.actividadID
+            WHERE sa.socioID = ?
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(socioID.toString()))
+        val actividades = mutableListOf<String>()
+        while (cursor.moveToNext()) {
+            actividades.add(cursor.getString(0))
+        }
+        cursor.close()
+        db.close()
+        return actividades
+    }
 }
+
 
