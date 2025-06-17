@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.clubdeportivosinergiafitness.R
+import com.example.clubdeportivosinergiafitness.data.ClubDBHelper
 
 
 class LoginActivity : AppCompatActivity() {
@@ -22,8 +23,10 @@ class LoginActivity : AppCompatActivity() {
             val user = usernameEditText.text.toString()
             val pass = passwordEditText.text.toString()
 
-            // Validación ficticia solo para demo
-            if (user == "admin" && pass == "1234") {
+            val dbHelper = ClubDBHelper(this)
+            val loginCorrecto = dbHelper.login(user, pass)
+
+            if (loginCorrecto) {
                 val intent = Intent(this, MenuPrincipalActivity::class.java)
                 startActivity(intent)
                 finish()
