@@ -55,7 +55,7 @@ class RegisterClientActivity : BaseActivity() {
                 esSocio -> {
                     // Si es socio, ir a SocioInfoActivity
                     val intent = Intent(this, SocioInfoActivity::class.java)
-                    intent.putExtra("dni_ingresado", dniIngresado)
+                    intent.putExtra("nro_doc", dniInt)
                     startActivity(intent)
                 }
                 existeCliente -> {
