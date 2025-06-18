@@ -59,11 +59,17 @@
                 android:src="@drawable/ic_money"
                 android:contentDescription="Ícono dinero" />
 
-            <Spinner
-                android:id="@+id/spinnerMonto"
+            <EditText
+                android:id="@+id/editTextMonto"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:popupBackground="@color/grisClaro"/>
+                android:enabled="false"
+                android:background="@drawable/edit_text_layer"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:gravity="center_vertical"/>
         </LinearLayout>
 
         <!-- Nombre y Apellido -->

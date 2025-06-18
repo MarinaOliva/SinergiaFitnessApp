@@ -125,7 +125,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             ('Natación', 3000.00, NULL),
             ('Pilates', 2500.00, 25),
             ('Yoga', 2300.00, 25),
-            ('Zumba', 2200.00, 0),
+            ('Zumba', 2200.00, 1),
             ('Aikido', 2700.00, 10),
             ('Acrobacia en tela', 3000.00, 7);
         """.trimIndent())
@@ -277,71 +277,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         } else {
             Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
         }
-        // ✅ Eliminar si estaba en NoSocio
+        // Eliminar si estaba en NoSocio
         db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
-        return true
-    }
-
-    // FUNCION PARA REGISTRAR NO SOCIO EN UNA ACTIVIDAD
-    fun registrarNoSocioEnActividad(
-        nombre: String,
-        apellido: String,
-        tipoDoc: String,
-        numDoc: Int,
-        idActividad: Int
-    ): Boolean {
-        val db = writableDatabase
-
-        // 1. Buscar si ya existe cliente
-        var clienteID = obtenerClienteID(numDoc)
-
-        // 2. Si no existe, insertarlo
-        if (clienteID == null) {
-            val values = ContentValues().apply {
-                put("nombre", nombre)
-                put("apellido", apellido)
-                put("tipoDoc", tipoDoc)
-                put("numDoc", numDoc)
-            }
-            val newID = db.insert("Cliente", null, values)
-            if (newID == -1L) return false
-            clienteID = newID
-        }
-
-        // 3. Verificar si ya está en NoSocio
-        val cursor = db.rawQuery("SELECT noSocioID FROM NoSocio WHERE clienteID = ?", arrayOf(clienteID.toString()))
-        val yaEsNoSocio = cursor.moveToFirst()
-        cursor.close()
-
-        // 4. Insertar en NoSocio si no está
-        if (!yaEsNoSocio) {
-            val noSocioValues = ContentValues().apply {
-                put("clienteID", clienteID)
-            }
-            val result = db.insert("NoSocio", null, noSocioValues)
-            if (result == -1L) return false
-        }
-
-        // 5. Verificar cupos de la actividad
-        val cupoCursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
-        if (!cupoCursor.moveToFirst()) {
-            cupoCursor.close()
-            return false // Actividad no existe
-        }
-
-        val cupos = cupoCursor.getInt(0)
-        cupoCursor.close()
-
-        if (cupos == 0) return false // No hay cupos
-
-        // 6. Descontar cupo si corresponde (si cupos no es NULL)
-        if (cupos > 0) {
-            db.execSQL(
-                "UPDATE Actividad SET cuposDisponibles = cuposDisponibles - 1 WHERE idActividad = ?",
-                arrayOf(idActividad.toString())
-            )
-        }
-
         return true
     }
 
@@ -408,6 +345,77 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         cursor.close()
         db.close()
         return actividades
+    }
+
+// FUNCION OBTENER ID ACTIVIDAD POR NOMBRE
+fun obtenerIdActividadPorNombre(nombre: String): Int {
+    val db = readableDatabase
+    val cursor = db.rawQuery("SELECT idActividad FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
+    val id = if (cursor.moveToFirst()) cursor.getInt(0) else -1
+    cursor.close()
+    return id
+}
+
+ //FUNCION OBTENER MONTO ACTIVIDAD POR NOMBRE
+    fun obtenerMontoActividadPorNombre(nombre: String): Double {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT costo FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
+        val monto = if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
+        cursor.close()
+        return monto
+    }
+
+    // FUNCION OBTENER COSTO DE ACTIVIDAD
+fun obtenerCostoActividad(idActividad: Int): Double? {
+    val db = readableDatabase
+    val cursor = db.rawQuery("SELECT costo FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
+    val costo = if (cursor.moveToFirst()) cursor.getDouble(0) else null
+    cursor.close()
+    return costo
+}
+// FUNCION OBTENER CUPOS DISPONIBLES ACTIVIDAD
+fun obtenerCuposDisponibles(idActividad: Int): Int? {
+    val db = readableDatabase
+    val cursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
+    val cupos = if (cursor.moveToFirst()) {
+        if (!cursor.isNull(0)) cursor.getInt(0) else null
+    } else null
+    cursor.close()
+    return cupos
+}
+
+// FUNCION DESCONTAR CUPOS DE ACTIVIDAD
+    fun descontarCupoActividad(idActividad: Int): Boolean {
+        val db = writableDatabase
+
+        val cupoCursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
+        if (!cupoCursor.moveToFirst()) {
+            cupoCursor.close()
+            return false // Actividad no existe
+        }
+
+        val cupos = cupoCursor.getInt(0)
+        cupoCursor.close()
+
+        if (cupos == 0) return false // No hay cupos
+
+        // Descontar cupo
+        db.execSQL(
+            "UPDATE Actividad SET cuposDisponibles = cuposDisponibles - 1 WHERE idActividad = ?",
+            arrayOf(idActividad.toString())
+        )
+
+        return true
+    }
+
+// FUNCION ACTUALIZAR CUPO ACTIVIDAD
+    fun actualizarCuposActividad(idActividad: Int, nuevoCupo: Int): Boolean {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put("cuposDisponibles", nuevoCupo)
+        }
+        val updatedRows = db.update("Actividad", values, "idActividad = ?", arrayOf(idActividad.toString()))
+        return updatedRows > 0
     }
 }
 
