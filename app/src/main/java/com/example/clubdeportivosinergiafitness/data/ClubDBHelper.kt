@@ -225,16 +225,42 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     ): Boolean {
         val db = writableDatabase
 
-        // Insertar en Cliente
-        val clienteValues = ContentValues().apply {
-            put("nombre", nombre)
-            put("apellido", apellido)
-            put("tipoDoc", tipoDoc)
-            put("numDoc", numDoc)
-        }
+        // Verificar si ya existe un cliente con ese DNI
+        val cursor = db.rawQuery(
+            "SELECT clienteID FROM Cliente WHERE numDoc = ? AND tipoDoc = ?",
+            arrayOf(numDoc.toString(), tipoDoc)
+        )
 
-        val clienteID = db.insert("Cliente", null, clienteValues)
-        if (clienteID == -1L) return false
+        val clienteID: Long = if (cursor.moveToFirst()) {
+            cursor.getLong(0) // Ya existe
+        } else {
+            // Insertar en Cliente
+            val clienteValues = ContentValues().apply {
+                put("nombre", nombre)
+                put("apellido", apellido)
+                put("tipoDoc", tipoDoc)
+                put("numDoc", numDoc)
+            }
+
+            val nuevoID = db.insert("Cliente", null, clienteValues)
+            if (nuevoID == -1L) {
+                cursor.close()
+                return false
+            }
+            nuevoID
+        }
+        cursor.close()
+
+        // Verificar si ya es socio
+        val cursorSocio = db.rawQuery(
+            "SELECT socioID FROM Socio WHERE clienteID = ?",
+            arrayOf(clienteID.toString())
+        )
+        if (cursorSocio.moveToFirst()) {
+            cursorSocio.close()
+            return false // Ya es socio
+        }
+        cursorSocio.close()
 
         // Insertar en Socio
         val socioValues = ContentValues().apply {
@@ -251,31 +277,11 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         } else {
             Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
         }
-
+        // ✅ Eliminar si estaba en NoSocio
+        db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
         return true
     }
 
-    // FUNCION PARA CONVERTIR CLIENTE NO SOCIO EN SOCIO
-fun asociarClienteComoSocio(numDoc: Int): Boolean {
-    val db = writableDatabase
-
-    // Buscar clienteID con numDoc
-    val cursor = db.rawQuery("SELECT clienteID FROM Cliente WHERE numDoc = ?", arrayOf(numDoc.toString()))
-    if (!cursor.moveToFirst()) {
-        cursor.close()
-        return false // cliente no encontrado
-    }
-    val clienteID = cursor.getLong(0)
-    cursor.close()
-
-    // Insertar en Socio
-    val valores = ContentValues().apply {
-        put("clienteID", clienteID)
-    }
-
-    val resultado = db.insert("Socio", null, valores)
-    return resultado != -1L
-}
     // FUNCION PARA REGISTRAR NO SOCIO EN UNA ACTIVIDAD
     fun registrarNoSocioEnActividad(
         nombre: String,
