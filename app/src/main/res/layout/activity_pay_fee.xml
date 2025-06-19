@@ -31,7 +31,7 @@
             android:id="@+id/numeroTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Número"
+            android:text="Número de socio:"
             android:textSize="20sp"
             android:gravity="center"
             android:layout_marginBottom="12dp"/>

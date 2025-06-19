@@ -38,7 +38,7 @@
 
     <!-- Botón -->
     <Button
-        android:id="@+id/loginButton"
+        android:id="@+id/consultarButton"
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="65dp"

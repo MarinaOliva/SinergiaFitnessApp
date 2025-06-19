@@ -309,7 +309,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return socioDatos
     }
 
-//FUNCION VER ESTADO DE ULTIMA CUOTA
+    //FUNCION VER ESTADO DE ULTIMA CUOTA
     fun obtenerEstadoUltimaCuota(socioID: Int): String {
         val db = readableDatabase
         val query = "SELECT fechaPago FROM Cuota WHERE socioID = ? ORDER BY fechaVencimiento DESC LIMIT 1"
@@ -327,7 +327,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return estado
     }
 
-// FUNCION LISTAR ACTIVIDADES DEL SOCIO
+    // FUNCION LISTAR ACTIVIDADES DEL SOCIO
     fun obtenerActividadesDelSocio(socioID: Int): List<String> {
         val db = readableDatabase
         val query = """
@@ -347,16 +347,16 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return actividades
     }
 
-// FUNCION OBTENER ID ACTIVIDAD POR NOMBRE
-fun obtenerIdActividadPorNombre(nombre: String): Int {
-    val db = readableDatabase
-    val cursor = db.rawQuery("SELECT idActividad FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
-    val id = if (cursor.moveToFirst()) cursor.getInt(0) else -1
-    cursor.close()
-    return id
-}
+    // FUNCION OBTENER ID ACTIVIDAD POR NOMBRE
+    fun obtenerIdActividadPorNombre(nombre: String): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT idActividad FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
+        val id = if (cursor.moveToFirst()) cursor.getInt(0) else -1
+        cursor.close()
+        return id
+    }
 
- //FUNCION OBTENER MONTO ACTIVIDAD POR NOMBRE
+    //FUNCION OBTENER MONTO ACTIVIDAD POR NOMBRE
     fun obtenerMontoActividadPorNombre(nombre: String): Double {
         val db = readableDatabase
         val cursor = db.rawQuery("SELECT costo FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
@@ -365,26 +365,10 @@ fun obtenerIdActividadPorNombre(nombre: String): Int {
         return monto
     }
 
-    // FUNCION OBTENER COSTO DE ACTIVIDAD
-fun obtenerCostoActividad(idActividad: Int): Double? {
-    val db = readableDatabase
-    val cursor = db.rawQuery("SELECT costo FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
-    val costo = if (cursor.moveToFirst()) cursor.getDouble(0) else null
-    cursor.close()
-    return costo
-}
-// FUNCION OBTENER CUPOS DISPONIBLES ACTIVIDAD
-fun obtenerCuposDisponibles(idActividad: Int): Int? {
-    val db = readableDatabase
-    val cursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
-    val cupos = if (cursor.moveToFirst()) {
-        if (!cursor.isNull(0)) cursor.getInt(0) else null
-    } else null
-    cursor.close()
-    return cupos
-}
 
-// FUNCION DESCONTAR CUPOS DE ACTIVIDAD
+
+
+    // FUNCION DESCONTAR CUPOS DE ACTIVIDAD
     fun descontarCupoActividad(idActividad: Int): Boolean {
         val db = writableDatabase
 
@@ -408,15 +392,69 @@ fun obtenerCuposDisponibles(idActividad: Int): Int? {
         return true
     }
 
-// FUNCION ACTUALIZAR CUPO ACTIVIDAD
-    fun actualizarCuposActividad(idActividad: Int, nuevoCupo: Int): Boolean {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put("cuposDisponibles", nuevoCupo)
+
+
+    // FUNCION OBTENER  DATOS DEL SOCIO PARA PAGO CUOTA
+    data class DatosCuotaPago(
+        val nombreCompleto: String,
+        val socioID: Int,
+        val importe: Double,
+        val fechaVencimiento: String,
+        val fechaPago: String
+    )
+
+    fun obtenerDatosParaPago(numSocio: Int): DatosCuotaPago? {
+        val db = readableDatabase
+        val query = """
+        SELECT c.nombre || ' ' || c.apellido AS nombreCompleto,
+               s.socioID,
+               cu.importe,
+               cu.fechaVencimiento
+        FROM Socio s
+        JOIN Cliente c ON s.clienteID = c.clienteID
+        JOIN Cuota cu ON cu.socioID = s.socioID
+        WHERE s.socioID = ?
+        ORDER BY cu.fechaVencimiento DESC
+        LIMIT 1
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(numSocio.toString()))
+        val datos = if (cursor.moveToFirst()) {
+            val nombreCompleto = cursor.getString(0)
+            val socioID = cursor.getInt(1)
+            val importe = cursor.getDouble(2)
+            val fechaVencimiento = cursor.getString(3)
+
+            val fechaPago = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                .format(java.util.Date())
+
+            DatosCuotaPago(nombreCompleto, socioID, importe, fechaVencimiento, fechaPago)
+        } else {
+            null
         }
-        val updatedRows = db.update("Actividad", values, "idActividad = ?", arrayOf(idActividad.toString()))
-        return updatedRows > 0
+        cursor.close()
+        db.close()
+        return datos
     }
+    // FUNCION REGISTRAR PAGO DE CUOTA
+    fun registrarPagoCuota(socioID: Int, importe: Double, fechaVencimiento: String): Boolean {
+        val db = writableDatabase
+
+        val fechaPago = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            .format(java.util.Date())
+
+        val valores = ContentValues().apply {
+            put("socioID", socioID)
+            put("fechaPago", fechaPago)
+            put("fechaVencimiento", fechaVencimiento)
+            put("importe", importe)
+        }
+
+        val resultado = db.insert("Cuota", null, valores)
+        db.close()
+        return resultado != -1L
+    }
+
 }
 
 
