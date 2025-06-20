@@ -50,9 +50,6 @@
         <!-- Consultar Cuota -->
         <activity android:name=".ui.activities.CheckFeeActivity" />
 
-        <!-- Inscribir Actividades -->
-        <activity android:name=".ui.activities.EnrollActivitiesActivity" />
-
         <!-- Registrar Socio -->
         <activity android:name=".ui.activities.RegisterMemberActivity" />
 
@@ -67,6 +64,12 @@
 
         <!-- Socio Info -->
         <activity android:name=".ui.activities.SocioInfoActivity" />
+
+        <!-- Consultar Actividades -->
+        <activity android:name=".ui.activities.ViewActivitiesActivity" />
+
+        <!-- Modificar Actividades -->
+        <activity android:name=".ui.activities.SelectActivitiesActivity" />
 
 
 

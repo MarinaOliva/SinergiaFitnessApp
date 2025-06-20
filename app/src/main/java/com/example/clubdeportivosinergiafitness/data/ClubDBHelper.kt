@@ -329,7 +329,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     }
 
 
-    // FUNCION OBTENER DATOS DEL SOCIO
+// FUNCION OBTENER DATOS DEL SOCIO
     fun obtenerDatosSocioPorDocumento(numDoc: Int): SocioDatos? {
         val db = readableDatabase
         val query = """
@@ -356,7 +356,34 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return socioDatos
     }
 
-    //FUNCION VER ESTADO DE ULTIMA CUOTA
+    // FUNCION OBTENER DATOS DEL SOCIO POR ID
+    fun obtenerDatosSocioPorID(socioID: Int): SocioDatos? {
+        val db = readableDatabase
+        val query = """
+        SELECT c.nombre, c.apellido, c.tipoDoc, c.numDoc, s.socioID
+        FROM Socio s
+        JOIN Cliente c ON s.clienteID = c.clienteID
+        WHERE s.socioID = ?
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, arrayOf(socioID.toString()))
+        val socioDatos = if (cursor.moveToFirst()) {
+            SocioDatos(
+                nombre = cursor.getString(0),
+                apellido = cursor.getString(1),
+                tipoDoc = cursor.getString(2),
+                numDoc = cursor.getInt(3),
+                socioID = cursor.getInt(4)
+            )
+        } else {
+            null
+        }
+        cursor.close()
+        db.close()
+        return socioDatos
+    }
+
+    //FUNCION VER ESTADO DE CUOTA
     fun obtenerEstadoUltimaCuota(socioID: Int): String {
         val db = readableDatabase
         val query =
@@ -507,4 +534,107 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
         return resultado != -1L
     }
+
+    // FUNCION PARA EDITAR LAS ACTIVIDADES DEL SOCIO
+             // funcion privada para obtener las act del socio
+    private fun obtenerActividadesDelSocioDesde(db: SQLiteDatabase, socioID: Int): List<String> {
+        val actividades = mutableListOf<String>()
+        val query = """
+        SELECT a.nombreActividad
+        FROM Actividad a
+        JOIN SocioActividad sa ON a.idActividad = sa.actividadID
+        WHERE sa.socioID = ?
+    """.trimIndent()
+        val cursor = db.rawQuery(query, arrayOf(socioID.toString()))
+        while (cursor.moveToNext()) {
+            actividades.add(cursor.getString(0))
+        }
+        cursor.close()
+        return actividades
+    }
+
+    // usa la fc anterior para actualizar las actividades del socio, sin abrir otra conexión
+    fun actualizarActividadesDelSocio(socioID: Int, nuevasActividades: List<String>): Boolean {
+        val db = writableDatabase
+        db.beginTransaction()
+
+        try {
+            // Usamos la versión segura con la misma conexión
+            val actuales = obtenerActividadesDelSocioDesde(db, socioID)
+
+            val aEliminar = actuales.filter { it !in nuevasActividades }
+            val aAgregar = nuevasActividades.filter { it !in actuales }
+
+            // Verificar cupos de actividades nuevas
+            for (nombre in aAgregar) {
+                val id = obtenerIdActividadPorNombre(nombre)
+                val cursor = db.rawQuery(
+                    "SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?",
+                    arrayOf(id.toString())
+                )
+
+                val cupo = if (cursor.moveToFirst()) cursor.getInt(0) else null
+                cursor.close()
+
+                if (cupo == null) {
+                    Log.e("DBHelper", "Actividad $nombre no encontrada")
+                    throw Exception("Actividad '$nombre' no encontrada.")
+                }
+
+                if (cupo <= 0) {
+                    throw Exception("Sin cupo en '$nombre'")
+                }
+            }
+
+            // Liberar cupos de actividades eliminadas
+            for (nombre in aEliminar) {
+                val id = obtenerIdActividadPorNombre(nombre)
+                db.execSQL(
+                    "UPDATE Actividad SET cuposDisponibles = cuposDisponibles + 1 WHERE idActividad = ?",
+                    arrayOf(id)
+                )
+                db.execSQL(
+                    "DELETE FROM SocioActividad WHERE socioID = ? AND actividadID = ?",
+                    arrayOf(socioID, id)
+                )
+            }
+
+            // Asignar nuevas actividades y descontar cupos
+            for (nombre in aAgregar) {
+                val id = obtenerIdActividadPorNombre(nombre)
+                db.execSQL(
+                    "INSERT INTO SocioActividad (socioID, actividadID) VALUES (?, ?)",
+                    arrayOf(socioID, id)
+                )
+                db.execSQL(
+                    "UPDATE Actividad SET cuposDisponibles = cuposDisponibles - 1 WHERE idActividad = ?",
+                    arrayOf(id)
+                )
+            }
+
+            db.setTransactionSuccessful()
+            return true
+
+        } catch (e: Exception) {
+            Log.e("DBHelper", "Error al actualizar actividades: ${e.message}")
+            return false
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+
+    // FUNCION OBTENER CUPO ACTUAL ACTIVIDAD
+fun obtenerCupoActividad(idActividad: Int): Int? {
+    val db = readableDatabase
+    val cursor = db.rawQuery(
+        "SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?",
+        arrayOf(idActividad.toString())
+    )
+
+    val cupo = if (cursor.moveToFirst()) cursor.getInt(0) else null
+    cursor.close()
+    return cupo
+}
+
 }

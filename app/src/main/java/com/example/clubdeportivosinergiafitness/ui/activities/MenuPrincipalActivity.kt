@@ -3,7 +3,6 @@ package com.example.clubdeportivosinergiafitness.ui.activities
 import android.os.Bundle
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.databinding.ActivityMenuPrincipalBinding
-import com.example.clubdeportivosinergiafitness.ui.activities.RegisterClientActivity
 import android.content.Intent
 
 class MenuPrincipalActivity : BaseActivity() {
@@ -29,7 +28,7 @@ class MenuPrincipalActivity : BaseActivity() {
         }
 
         binding.btnActividadesGuiadas.setOnClickListener {
-            val intent = Intent(this, EnrollActivitiesActivity::class.java)
+            val intent = Intent(this, ViewActivitiesActivity::class.java)
             startActivity(intent)
         }
 
