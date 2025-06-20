@@ -17,7 +17,8 @@ data class SocioDatos(
 class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 1) {
 
     override fun onCreate(db: SQLiteDatabase) {
-        db.execSQL("""
+        db.execSQL(
+            """
         CREATE TABLE Cliente (
             clienteID INTEGER PRIMARY KEY AUTOINCREMENT,
             nombre TEXT NOT NULL,
@@ -25,9 +26,11 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             tipoDoc TEXT,
             numDoc INTEGER
         );
-    """.trimIndent())
+    """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE Socio (
             socioID INTEGER PRIMARY KEY AUTOINCREMENT,
             clienteID INTEGER,
@@ -36,26 +39,32 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             presentaAptoFisico INTEGER,
             FOREIGN KEY (clienteID) REFERENCES Cliente(clienteID)
         );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE NoSocio (
                 noSocioID INTEGER PRIMARY KEY AUTOINCREMENT,
                 clienteID INTEGER,
                 FOREIGN KEY (clienteID) REFERENCES Cliente(clienteID)
             );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE Actividad (
                 idActividad INTEGER PRIMARY KEY AUTOINCREMENT,
                 nombreActividad TEXT,
                 costo REAL,
                 cuposDisponibles INTEGER
             );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE Cuota (
                 idCuota INTEGER PRIMARY KEY AUTOINCREMENT,
                 socioID INTEGER,
@@ -64,18 +73,22 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                 importe REAL,
                 FOREIGN KEY (socioID) REFERENCES Socio(socioID)
             );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE administrador (
                 idAdministrador INTEGER PRIMARY KEY AUTOINCREMENT,
                 NombreUsu TEXT,
                 PassUsu TEXT,
                 Activo INTEGER
             );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
-        db.execSQL("""
+        db.execSQL(
+            """
             CREATE TABLE SocioActividad (
                 socioID INTEGER,
                 actividadID INTEGER,
@@ -83,14 +96,16 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                 FOREIGN KEY (socioID) REFERENCES Socio(socioID),
                 FOREIGN KEY (actividadID) REFERENCES Actividad(idActividad)
             );
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         insertarDatosIniciales(db)
     }
 
     private fun insertarDatosIniciales(db: SQLiteDatabase) {
         // Insertar Clientes
-        db.execSQL("""
+        db.execSQL(
+            """
            INSERT INTO Cliente (nombre, apellido, tipoDoc, numDoc) VALUES
         ('Martín', 'Aliaga', 'DNI', 12345678),
         ('Lucía', 'López', 'DNI', 87654321),
@@ -100,10 +115,12 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         ('Carlos', 'Ramírez', 'DNI', 15975384),
         ('Ana', 'García', 'DNI', 75315986),
         ('Miguel', 'Torres', 'DNI', 85236914);
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // Insertar Socios
-        db.execSQL("""
+        db.execSQL(
+            """
         INSERT INTO Socio (clienteID, telefono, email, presentaAptoFisico) VALUES
         (1, 11223344, 'martin.gonzalez@yahoo.com', 1),
         (2, 22334455, 'lucia.lopez@gmail.com', 1),
@@ -111,15 +128,19 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         (6, 78899001, 'carlos.ramirez@gmail.com', 1),
         (7, 99001122, 'ana.garcia@yahoo.com', 1),
         (8, 90011222, 'miguel.torres@hotmail.com', 1);
-    """.trimIndent())
+    """.trimIndent()
+        )
 
         // Insertar No Socios
-        db.execSQL("""
+        db.execSQL(
+            """
         INSERT INTO NoSocio (clienteID) VALUES (3), (5);
-    """.trimIndent())
+    """.trimIndent()
+        )
 
         // Insertar Actividades
-        db.execSQL("""
+        db.execSQL(
+            """
             INSERT INTO Actividad (nombreActividad, costo, cuposDisponibles) VALUES
             ('Musculación y Aparatos', 2000.00, NULL),
             ('Natación', 3000.00, NULL),
@@ -128,10 +149,12 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             ('Zumba', 2200.00, 1),
             ('Aikido', 2700.00, 10),
             ('Acrobacia en tela', 3000.00, 7);
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // Insertar Cuotas
-        db.execSQL("""
+        db.execSQL(
+            """
             INSERT INTO Cuota (socioID, fechaVencimiento, fechaPago, importe) VALUES
             (1, '2025-07-31', '2024-10-31', 33000.00),
             (2, '2025-07-15', '2024-10-14', 33000.00),
@@ -139,17 +162,21 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             (4, '2025-07-28', NULL, 33000.00),
             (5, '2025-07-20', NULL, 33000.00),
             (6, '2025-07-25', '2024-10-25', 33000.00);
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // Insertar Administradores
-        db.execSQL("""
+        db.execSQL(
+            """
             INSERT INTO administrador (NombreUsu, PassUsu, Activo) VALUES
             ('Juan_Gomez', 'Juan2025!', 1),
             ('Maria_Perez', 'Maria@123', 1);
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         // Insertar SocioActividad
-        db.execSQL("""
+        db.execSQL(
+            """
             INSERT INTO SocioActividad (socioID, actividadID) VALUES
             (1, 6),
             (1, 3),
@@ -157,7 +184,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             (2, 5),
             (4, 5),
             (6, 6);
-        """.trimIndent())
+        """.trimIndent()
+        )
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
@@ -191,7 +219,10 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     // FUNCION PARA OBTENER EL ID DEL CLIENTE
     fun obtenerClienteID(numDoc: Int): Long? {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT clienteID FROM Cliente WHERE numDoc = ?", arrayOf(numDoc.toString()))
+        val cursor = db.rawQuery(
+            "SELECT clienteID FROM Cliente WHERE numDoc = ?",
+            arrayOf(numDoc.toString())
+        )
         val clienteID = if (cursor.moveToFirst()) cursor.getLong(0) else null
         cursor.close()
         return clienteID
@@ -277,8 +308,28 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         } else {
             Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
         }
+
         // Eliminar si estaba en NoSocio
         db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
+
+        // Agregar una cuota inicial con vencimiento 30 días después
+        val calendario = java.util.Calendar.getInstance()
+        calendario.add(java.util.Calendar.DAY_OF_YEAR, 30)
+        val fechaVencimiento = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+            .format(calendario.time)
+
+        val cuotaValues = ContentValues().apply {
+            put("socioID", socioID)
+            put("fechaVencimiento", fechaVencimiento)
+            put("fechaPago", null as String?)  // No pagada aún
+            put("importe", 33000.00) // Importe fijo
+        }
+
+        val resultadoCuota = db.insert("Cuota", null, cuotaValues)
+        if (resultadoCuota == -1L) {
+            Log.e("DBHelper", "Error al insertar cuota para socioID $socioID")
+            return false
+        }
         return true
     }
 
@@ -312,7 +363,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     //FUNCION VER ESTADO DE ULTIMA CUOTA
     fun obtenerEstadoUltimaCuota(socioID: Int): String {
         val db = readableDatabase
-        val query = "SELECT fechaPago FROM Cuota WHERE socioID = ? ORDER BY fechaVencimiento DESC LIMIT 1"
+        val query =
+            "SELECT fechaPago FROM Cuota WHERE socioID = ? ORDER BY fechaVencimiento DESC LIMIT 1"
         val cursor = db.rawQuery(query, arrayOf(socioID.toString()))
 
         val estado = if (cursor.moveToFirst()) {
@@ -350,7 +402,10 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     // FUNCION OBTENER ID ACTIVIDAD POR NOMBRE
     fun obtenerIdActividadPorNombre(nombre: String): Int {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT idActividad FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
+        val cursor = db.rawQuery(
+            "SELECT idActividad FROM Actividad WHERE nombreActividad = ?",
+            arrayOf(nombre)
+        )
         val id = if (cursor.moveToFirst()) cursor.getInt(0) else -1
         cursor.close()
         return id
@@ -359,20 +414,22 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     //FUNCION OBTENER MONTO ACTIVIDAD POR NOMBRE
     fun obtenerMontoActividadPorNombre(nombre: String): Double {
         val db = readableDatabase
-        val cursor = db.rawQuery("SELECT costo FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
+        val cursor =
+            db.rawQuery("SELECT costo FROM Actividad WHERE nombreActividad = ?", arrayOf(nombre))
         val monto = if (cursor.moveToFirst()) cursor.getDouble(0) else 0.0
         cursor.close()
         return monto
     }
 
 
-
-
     // FUNCION DESCONTAR CUPOS DE ACTIVIDAD
     fun descontarCupoActividad(idActividad: Int): Boolean {
         val db = writableDatabase
 
-        val cupoCursor = db.rawQuery("SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?", arrayOf(idActividad.toString()))
+        val cupoCursor = db.rawQuery(
+            "SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?",
+            arrayOf(idActividad.toString())
+        )
         if (!cupoCursor.moveToFirst()) {
             cupoCursor.close()
             return false // Actividad no existe
@@ -391,7 +448,6 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
 
         return true
     }
-
 
 
     // FUNCION OBTENER  DATOS DEL SOCIO PARA PAGO CUOTA
@@ -436,6 +492,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
         return datos
     }
+
     // FUNCION REGISTRAR PAGO DE CUOTA
     fun registrarPagoCuota(socioID: Int, importe: Double, fechaVencimiento: String): Boolean {
         val db = writableDatabase
@@ -454,7 +511,4 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
         return resultado != -1L
     }
-
 }
-
-
