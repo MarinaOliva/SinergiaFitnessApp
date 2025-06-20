@@ -243,8 +243,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         cursor.close()
         return esSocio
     }
-
-    // FUNCION PARA CREAR NUEVO SOCIO + CLIENTE
+// FUNCION PARA INSCRIBIR NUEVO SOCIO ( y guardarlo tmb en la tabla clientes)
     fun insertarSocio(
         nombre: String,
         apellido: String,
@@ -253,7 +252,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         telefono: Int,
         email: String,
         presentaApto: Boolean
-    ): Boolean {
+    ): Long {
         val db = writableDatabase
 
         // Verificar si ya existe un cliente con ese DNI
@@ -263,9 +262,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         )
 
         val clienteID: Long = if (cursor.moveToFirst()) {
-            cursor.getLong(0) // Ya existe
+            cursor.getLong(0)
         } else {
-            // Insertar en Cliente
             val clienteValues = ContentValues().apply {
                 put("nombre", nombre)
                 put("apellido", apellido)
@@ -276,24 +274,22 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             val nuevoID = db.insert("Cliente", null, clienteValues)
             if (nuevoID == -1L) {
                 cursor.close()
-                return false
+                return -1L
             }
             nuevoID
         }
         cursor.close()
 
-        // Verificar si ya es socio
         val cursorSocio = db.rawQuery(
             "SELECT socioID FROM Socio WHERE clienteID = ?",
             arrayOf(clienteID.toString())
         )
         if (cursorSocio.moveToFirst()) {
             cursorSocio.close()
-            return false // Ya es socio
+            return -1L // Ya es socio
         }
         cursorSocio.close()
 
-        // Insertar en Socio
         val socioValues = ContentValues().apply {
             put("clienteID", clienteID)
             put("telefono", telefono)
@@ -304,15 +300,13 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         val socioID = db.insert("Socio", null, socioValues)
         if (socioID == -1L) {
             Log.e("DBHelper", "Error al insertar socio para clienteID $clienteID")
-            return false
+            return -1L
         } else {
             Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
         }
 
-        // Eliminar si estaba en NoSocio
         db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
 
-        // Agregar una cuota inicial con vencimiento 30 días después
         val calendario = java.util.Calendar.getInstance()
         calendario.add(java.util.Calendar.DAY_OF_YEAR, 30)
         val fechaVencimiento = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
@@ -322,16 +316,18 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             put("socioID", socioID)
             put("fechaVencimiento", fechaVencimiento)
             put("fechaPago", null as String?)  // No pagada aún
-            put("importe", 33000.00) // Importe fijo
+            put("importe", 33000.00)
         }
 
         val resultadoCuota = db.insert("Cuota", null, cuotaValues)
         if (resultadoCuota == -1L) {
             Log.e("DBHelper", "Error al insertar cuota para socioID $socioID")
-            return false
+            return -1L
         }
-        return true
+
+        return socioID
     }
+
 
     // FUNCION OBTENER DATOS DEL SOCIO
     fun obtenerDatosSocioPorDocumento(numDoc: Int): SocioDatos? {

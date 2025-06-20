@@ -31,41 +31,55 @@ class RegisterClientActivity : BaseActivity() {
 
         binding.btnConsultar.setOnClickListener {
             val tipoDoc = binding.spinnerTipoDocumento.selectedItem.toString()
-            if (tipoDoc == "Seleccione tipo documento") {
+
+            // Validar que el usuario haya seleccionado un tipo distinto al hint por defecto
+            if (tipoDoc == "Tipo de doc...") {
                 Toast.makeText(this, "Por favor, seleccione un tipo de documento", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+                return@setOnClickListener // Detener la ejecución si no seleccionó
             }
 
-            val dniIngresado = binding.etNumeroDocumento.text.toString()
+            val dniIngresado = binding.etNumeroDocumento.text.toString().trim()
+
+            // Validar que el campo no esté vacío
             if (dniIngresado.isBlank()) {
-                Toast.makeText(this, "Por favor, ingrese un DNI válido", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Por favor, ingrese el número de documento", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Validar que la longitud sea entre 7 y 8 caracteres (longitud típica del DNI)
+            if (dniIngresado.length !in 7..8) {
+                Toast.makeText(this, "El número de documento debe tener entre 7 y 8 dígitos", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Intentar convertir el texto a número entero, si no es posible, mostrar error
             val dniInt = dniIngresado.toIntOrNull()
             if (dniInt == null) {
-                Toast.makeText(this, "El DNI debe ser numérico", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "El número de documento debe ser numérico", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            // Consultar en la base de datos si ya existe un cliente con ese DNI
             val existeCliente = dbHelper.obtenerClienteID(dniInt) != null
+            // Consultar si ese cliente es socio
             val esSocio = dbHelper.esSocio(dniInt)
 
+            // Según el caso, ir a la pantalla correspondiente:
             when {
                 esSocio -> {
-                    // Si es socio, ir a SocioInfoActivity
+                    // Si es socio, ir a pantalla de info socio
                     val intent = Intent(this, SocioInfoActivity::class.java)
                     intent.putExtra("nro_doc", dniInt)
                     startActivity(intent)
                 }
                 existeCliente -> {
-                    // Cliente, pero no socio: ir a RegistrationActivity
+                    // Si existe como cliente pero no es socio, ir a registro para socio
                     val intent = Intent(this, RegistrationActivity::class.java)
                     intent.putExtra("dni_ingresado", dniIngresado)
                     startActivity(intent)
                 }
                 else -> {
-                    // No existe como cliente ni socio: también a RegistrationActivity
+                    // Si no existe ni como cliente ni socio, también ir a registro para nuevo cliente/socio
                     val intent = Intent(this, RegistrationActivity::class.java)
                     intent.putExtra("dni_ingresado", dniIngresado)
                     startActivity(intent)

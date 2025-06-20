@@ -1,5 +1,6 @@
 package com.example.clubdeportivosinergiafitness.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.*
 import com.example.clubdeportivosinergiafitness.BaseActivity
@@ -41,13 +42,13 @@ class RegisterMemberActivity : BaseActivity() {
         btnRegistrar = findViewById(R.id.btnRegistrar)
         btnCancelar = findViewById(R.id.btnCancelar)
 
-        // Instancia DB Helper
         dbHelper = ClubDBHelper(this)
 
-        // Autocompletar fecha actual en formato yyyy-MM-dd
+        // Fecha actual en formato yyyy-MM-dd
         val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         tvFecha.text = fechaActual
 
+        // Botón Registrar
         btnRegistrar.setOnClickListener {
             val nombre = etNombre.text.toString().trim()
             val apellido = etApellido.text.toString().trim()
@@ -56,24 +57,16 @@ class RegisterMemberActivity : BaseActivity() {
             val email = etEmail.text.toString().trim()
             val aptoSeleccionadoId = rgAptoFisico.checkedRadioButtonId
 
-            // Validaciones básicas
-            if (nombre.isEmpty() || apellido.isEmpty() || dniStr.isEmpty() || telefonoStr.isEmpty() || email.isEmpty() || aptoSeleccionadoId == -1) {
-                Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+            // Validaciones
+            if (!validarCampos(nombre, apellido, dniStr, telefonoStr, email, aptoSeleccionadoId)) {
                 return@setOnClickListener
             }
 
-            val dni = dniStr.toIntOrNull()
-            val telefono = telefonoStr.toIntOrNull()
-
-            if (dni == null || telefono == null) {
-                Toast.makeText(this, "Documento y teléfono deben ser números válidos", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
+            val dni = dniStr.toInt()
+            val telefono = telefonoStr.toInt()
             val presentaApto = aptoSeleccionadoId == rbAptoSi.id
 
-            // Guardar en la base
-            val exito = dbHelper.insertarSocio(
+            val socioID = dbHelper.insertarSocio(
                 nombre = nombre,
                 apellido = apellido,
                 tipoDoc = "DNI",
@@ -83,16 +76,64 @@ class RegisterMemberActivity : BaseActivity() {
                 presentaApto = presentaApto
             )
 
-            if (exito) {
-                Toast.makeText(this, "Socio registrado correctamente", Toast.LENGTH_LONG).show()
-                finish() // Opcional: cierra esta activity y vuelve a la anterior
+            if (socioID != -1L) {
+                Toast.makeText(this, "Socio registrado correctamente", Toast.LENGTH_SHORT).show()
+
+                val intent = Intent(this, RegisteredMemberActivity::class.java).apply {
+                    putExtra("nombre", nombre)
+                    putExtra("apellido", apellido)
+                    putExtra("dni", dniStr)
+                    putExtra("numeroSocio", socioID.toString())
+                }
+                startActivity(intent)
+                finish()
             } else {
                 Toast.makeText(this, "Error al registrar socio", Toast.LENGTH_LONG).show()
             }
         }
 
+        // Botón Cancelar
         btnCancelar.setOnClickListener {
-            finish() // Solo cierra esta activity y vuelve atrás
+            startActivity(Intent(this, MenuPrincipalActivity::class.java))
+            finish()
         }
+    }
+
+    // Validación de campos
+    private fun validarCampos(
+        nombre: String,
+        apellido: String,
+        dniStr: String,
+        telefonoStr: String,
+        email: String,
+        aptoSeleccionadoId: Int
+    ): Boolean {
+        if (nombre.isBlank() || apellido.isBlank() || dniStr.isBlank() || telefonoStr.isBlank() || email.isBlank() || aptoSeleccionadoId == -1) {
+            Toast.makeText(this, "Por favor, completa todos los campos", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        val regexNombre = "^[a-zA-ZÁÉÍÓÚáéíóúñÑ ]+$".toRegex()
+        if (!regexNombre.matches(nombre) || !regexNombre.matches(apellido)) {
+            Toast.makeText(this, "Nombre y apellido deben contener solo letras", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (dniStr.length !in 7..8 || dniStr.toIntOrNull() == null) {
+            Toast.makeText(this, "DNI inválido", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (telefonoStr.length < 8 || telefonoStr.toIntOrNull() == null) {
+            Toast.makeText(this, "Teléfono inválido", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Email no válido", Toast.LENGTH_SHORT).show()
+            return false
+        }
+
+        return true
     }
 }
