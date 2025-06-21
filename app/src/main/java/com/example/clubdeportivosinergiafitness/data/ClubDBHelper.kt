@@ -14,7 +14,7 @@ data class SocioDatos(
     val socioID: Int
 )
 
-class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 1) {
+class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 2) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -156,12 +156,12 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.execSQL(
             """
             INSERT INTO Cuota (socioID, fechaVencimiento, fechaPago, importe) VALUES
-            (1, '2025-07-31', '2024-10-31', 33000.00),
-            (2, '2025-07-15', '2024-10-14', 33000.00),
-            (3, '2025-07-15', '2024-10-14', 33000.00),            
-            (4, '2025-07-28', NULL, 33000.00),
-            (5, '2025-07-20', NULL, 33000.00),
-            (6, '2025-07-25', '2024-10-25', 33000.00);
+            (1, '2025-06-10', '2025-06-05', 33000.00),
+            (2, '2025-06-10', '2025-06-07', 33000.00),
+            (3, '2025-06-10', '2025-06-08', 33000.00),            
+            (4, '2025-06-10', NULL, 33000.00),
+            (5, '2025-06-10', NULL, 33000.00),
+            (6, '2025-06-10', '2024-06-09', 33000.00);
         """.trimIndent()
         )
 
@@ -243,7 +243,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         cursor.close()
         return esSocio
     }
-// FUNCION PARA INSCRIBIR NUEVO SOCIO ( y guardarlo tmb en la tabla clientes)
+    // FUNCION PARA INSCRIBIR NUEVO SOCIO ( y guardarlo tmb en la tabla clientes)
     fun insertarSocio(
         nombre: String,
         apellido: String,
@@ -307,10 +307,20 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
 
         db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
 
-        val calendario = java.util.Calendar.getInstance()
-        calendario.add(java.util.Calendar.DAY_OF_YEAR, 30)
+        val hoy = java.util.Calendar.getInstance()
+        val dia = hoy.get(java.util.Calendar.DAY_OF_MONTH)
+
+        val fechaVenc = java.util.Calendar.getInstance()
+        fechaVenc.set(java.util.Calendar.DAY_OF_MONTH, 10)
+
+// Si ya pasó el 10, la cuota vence el 10 del mes siguiente
+        if (dia > 10) {
+            fechaVenc.add(java.util.Calendar.MONTH, 1)
+        }
+
         val fechaVencimiento = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-            .format(calendario.time)
+            .format(fechaVenc.time)
+
 
         val cuotaValues = ContentValues().apply {
             put("socioID", socioID)
@@ -329,7 +339,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     }
 
 
-// FUNCION OBTENER DATOS DEL SOCIO
+    // FUNCION OBTENER DATOS DEL SOCIO
     fun obtenerDatosSocioPorDocumento(numDoc: Int): SocioDatos? {
         val db = readableDatabase
         val query = """
@@ -488,7 +498,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         SELECT c.nombre || ' ' || c.apellido AS nombreCompleto,
                s.socioID,
                cu.importe,
-               cu.fechaVencimiento
+               cu.fechaVencimiento,
+               cu.fechaPago
         FROM Socio s
         JOIN Cliente c ON s.clienteID = c.clienteID
         JOIN Cuota cu ON cu.socioID = s.socioID
@@ -501,13 +512,27 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         val datos = if (cursor.moveToFirst()) {
             val nombreCompleto = cursor.getString(0)
             val socioID = cursor.getInt(1)
-            val importe = cursor.getDouble(2)
+            val importeOriginal = cursor.getDouble(2)
             val fechaVencimiento = cursor.getString(3)
+            val fechaPago = cursor.getString(4) // puede ser null
 
-            val fechaPago = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-                .format(java.util.Date())
+            // Si ya está pagada, no hay nada que pagar
+            if (!fechaPago.isNullOrEmpty()) {
+                null // retorna null y la Activity lo interpretará como "ya pagó"
+            } else {
+                val sdf = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                val fechaHoy = sdf.parse(sdf.format(java.util.Date()))
+                val fechaVto = sdf.parse(fechaVencimiento)
 
-            DatosCuotaPago(nombreCompleto, socioID, importe, fechaVencimiento, fechaPago)
+                val importeFinal = if (fechaHoy.after(fechaVto)) {
+                    importeOriginal + 5000
+                } else {
+                    importeOriginal
+                }
+
+                val hoyTexto = sdf.format(java.util.Date())
+                DatosCuotaPago(nombreCompleto, socioID, importeFinal, fechaVencimiento, hoyTexto)
+            }
         } else {
             null
         }
@@ -515,6 +540,38 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
         return datos
     }
+
+    // Devuelve:
+// 0 → socio no existe
+// 1 → socio existe pero no tiene cuotas (por error en registro o bbdd)
+// 2 → socio tiene cuotas, todas pagadas
+// 3 → socio tiene al menos una cuota pendiente
+    fun verificarEstadoCuotas(socioID: Int): Int {
+        val db = readableDatabase
+
+        // ¿Existe el socio?
+        val cursorSocio = db.rawQuery("SELECT COUNT(*) FROM Socio WHERE socioID = ?", arrayOf(socioID.toString()))
+        val existe = cursorSocio.moveToFirst() && cursorSocio.getInt(0) > 0
+        cursorSocio.close()
+
+        if (!existe) return 0
+
+        // ¿Tiene cuotas?
+        val cursorCuotas = db.rawQuery("SELECT COUNT(*) FROM Cuota WHERE socioID = ?", arrayOf(socioID.toString()))
+        val tieneCuotas = cursorCuotas.moveToFirst() && cursorCuotas.getInt(0) > 0
+        cursorCuotas.close()
+
+        if (!tieneCuotas) return 1
+
+        // ¿Tiene cuotas impagas?
+        val cursorPendientes = db.rawQuery("SELECT COUNT(*) FROM Cuota WHERE socioID = ? AND fechaPago IS NULL", arrayOf(socioID.toString()))
+        val tieneImpagas = cursorPendientes.moveToFirst() && cursorPendientes.getInt(0) > 0
+        cursorPendientes.close()
+
+        return if (tieneImpagas) 3 else 2
+    }
+
+
 
     // FUNCION REGISTRAR PAGO DE CUOTA
     fun registrarPagoCuota(socioID: Int, importe: Double, fechaVencimiento: String): Boolean {
@@ -536,7 +593,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
     }
 
     // FUNCION PARA EDITAR LAS ACTIVIDADES DEL SOCIO
-             // funcion privada para obtener las act del socio
+    // funcion privada para obtener las act del socio
     private fun obtenerActividadesDelSocioDesde(db: SQLiteDatabase, socioID: Int): List<String> {
         val actividades = mutableListOf<String>()
         val query = """
@@ -625,16 +682,16 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
 
 
     // FUNCION OBTENER CUPO ACTUAL ACTIVIDAD
-fun obtenerCupoActividad(idActividad: Int): Int? {
-    val db = readableDatabase
-    val cursor = db.rawQuery(
-        "SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?",
-        arrayOf(idActividad.toString())
-    )
+    fun obtenerCupoActividad(idActividad: Int): Int? {
+        val db = readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT cuposDisponibles FROM Actividad WHERE idActividad = ?",
+            arrayOf(idActividad.toString())
+        )
 
-    val cupo = if (cursor.moveToFirst()) cursor.getInt(0) else null
-    cursor.close()
-    return cupo
-}
+        val cupo = if (cursor.moveToFirst()) cursor.getInt(0) else null
+        cursor.close()
+        return cupo
+    }
 
 }
