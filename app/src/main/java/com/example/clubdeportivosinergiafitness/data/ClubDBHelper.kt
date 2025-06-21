@@ -14,7 +14,7 @@ data class SocioDatos(
     val socioID: Int
 )
 
-class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 2) {
+class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null, 3) {
 
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(
@@ -82,6 +82,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                 idAdministrador INTEGER PRIMARY KEY AUTOINCREMENT,
                 NombreUsu TEXT,
                 PassUsu TEXT,
+                email TEXT,
                 Activo INTEGER
             );
         """.trimIndent()
@@ -168,9 +169,9 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         // Insertar Administradores
         db.execSQL(
             """
-            INSERT INTO administrador (NombreUsu, PassUsu, Activo) VALUES
-            ('Juan_Gomez', 'Juan2025!', 1),
-            ('Maria_Perez', 'Maria@123', 1);
+            INSERT INTO administrador (NombreUsu, PassUsu, email, Activo) VALUES
+            ('Juan_Gomez', 'Juan2025!', 'juan.gomez@club.com', 1),
+            ('Maria_Perez', 'Maria@123', 'maria.perez@club.com', 1);
         """.trimIndent()
         )
 
@@ -731,5 +732,47 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.close()
         return lista
     }
+
+    // FUNCION OBTENER DATOS DEL ADMIN (a partir del nombre de usuario)
+    fun obtenerDatosAdmin(nombreUsuario: String): AdminDatos? {
+        val db = readableDatabase
+        val query = """
+        SELECT NombreUsu, email, PassUsu FROM administrador WHERE NombreUsu = ?
+    """.trimIndent()
+        val cursor = db.rawQuery(query, arrayOf(nombreUsuario))
+        val datos = if (cursor.moveToFirst()) {
+            AdminDatos(
+                nombreUsu = cursor.getString(0),
+                email = cursor.getString(1),
+                passUsu = cursor.getString(2)
+            )
+        } else null
+        cursor.close()
+        db.close()
+        return datos
+    }
+
+    // FUNCION ACTUALIZAR CONTRASEÑA DEL  ADMIN
+    fun actualizarPassAdmin(nombreUsuario: String, nuevaPass: String): Boolean {
+        val db = writableDatabase
+        val cv = ContentValues().apply {
+            put("PassUsu", nuevaPass)
+        }
+        val filasActualizadas = db.update(
+            "administrador",
+            cv,
+            "NombreUsu = ?",
+            arrayOf(nombreUsuario)
+        )
+        db.close()
+        return filasActualizadas > 0
+    }
+
+    // Data class para admin
+    data class AdminDatos(
+        val nombreUsu: String,
+        val email: String,
+        val passUsu: String
+    )
 
 }

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.clubdeportivosinergiafitness.R
 import com.example.clubdeportivosinergiafitness.data.ClubDBHelper
 
-
 class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +26,10 @@ class LoginActivity : AppCompatActivity() {
             val loginCorrecto = dbHelper.login(user, pass)
 
             if (loginCorrecto) {
+                // Guardar usuario logueado en SharedPreferences
+                val prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE)
+                prefs.edit().putString("usuarioLogueado", user).apply()
+
                 val intent = Intent(this, MenuPrincipalActivity::class.java)
                 startActivity(intent)
                 finish()
