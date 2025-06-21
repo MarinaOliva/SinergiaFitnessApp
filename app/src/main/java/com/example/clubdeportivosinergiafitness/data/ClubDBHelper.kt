@@ -694,4 +694,42 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return cupo
     }
 
+ // FUNCION OBTENER CUOTAS VENCIDAS
+    data class CuotaVencida(
+        val idSocio: Int,
+        val nombre: String,
+        val apellido: String,
+        val fechaVencimiento: String,
+        val importe: Double
+    )
+
+    fun obtenerCuotasVencidas(): List<CuotaVencida> {
+        val db = readableDatabase
+        val lista = mutableListOf<CuotaVencida>()
+
+        val query = """
+        SELECT s.socioID, c.nombre, c.apellido, cu.fechaVencimiento, cu.importe
+        FROM Cuota cu
+        JOIN Socio s ON cu.socioID = s.socioID
+        JOIN Cliente c ON s.clienteID = c.clienteID
+        WHERE cu.fechaPago IS NULL
+        AND date(cu.fechaVencimiento) < date('now')
+    """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        while (cursor.moveToNext()) {
+            val cuota = CuotaVencida(
+                idSocio = cursor.getInt(0),
+                nombre = cursor.getString(1),
+                apellido = cursor.getString(2),
+                fechaVencimiento = cursor.getString(3),
+                importe = cursor.getDouble(4)
+            )
+            lista.add(cuota)
+        }
+        cursor.close()
+        db.close()
+        return lista
+    }
+
 }

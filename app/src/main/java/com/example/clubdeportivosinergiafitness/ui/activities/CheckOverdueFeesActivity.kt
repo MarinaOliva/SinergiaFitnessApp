@@ -5,7 +5,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.R
-import com.example.clubdeportivosinergiafitness.data.FakeCuotasData
+import com.example.clubdeportivosinergiafitness.data.ClubDBHelper
 import android.graphics.Color
 
 
@@ -16,7 +16,9 @@ class CheckOverdueFeesActivity : BaseActivity() {
 
         val tablaCuotas = findViewById<LinearLayout>(R.id.tablaCuotas)
 
-        val cuotasVencidas = FakeCuotasData.obtenerCuotasVencidasDelDia()
+        val dbHelper = ClubDBHelper(this)
+        val cuotasVencidas = dbHelper.obtenerCuotasVencidas()
+
 
         for ((index, cuota) in cuotasVencidas.withIndex()) {
             val fila = LinearLayout(this).apply {
