@@ -96,7 +96,7 @@
         style="@style/PrimaryButtonStyle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Imprimir"
+        android:text="Guardar PDF"
         android:gravity="center"
         android:textAppearance="@style/PrimaryButtonText"
         app:layout_constraintTop_toBottomOf="@id/layoutInfo"
