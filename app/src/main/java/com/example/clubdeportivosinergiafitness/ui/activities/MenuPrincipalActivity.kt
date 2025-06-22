@@ -1,16 +1,20 @@
 package com.example.clubdeportivosinergiafitness.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.databinding.ActivityMenuPrincipalBinding
-import android.content.Intent
+import com.example.clubdeportivosinergiafitness.data.SessionManager
 
 class MenuPrincipalActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMenuPrincipalBinding
+    private lateinit var sessionManager: SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        sessionManager = SessionManager(this)
 
         // Inflar el contenido y agregarlo al contentFrame definido en BaseActivity
         binding = ActivityMenuPrincipalBinding.inflate(layoutInflater)
@@ -38,10 +42,13 @@ class MenuPrincipalActivity : BaseActivity() {
         }
 
         binding.btnCerrarSesion.setOnClickListener {
-            // Volver al login y cerrar sesión
+            // Cierra la sesión limpiando SharedPreferences
+            sessionManager.logout()
+
+            // Volver al login y cerrar actividad actual
             val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
-            finish()  // Cierra la actividad actual
+            finish()
         }
     }
 }

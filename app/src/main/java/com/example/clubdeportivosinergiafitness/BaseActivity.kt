@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.clubdeportivosinergiafitness.data.SessionManager
 import com.example.clubdeportivosinergiafitness.ui.activities.AboutActivity
 import com.example.clubdeportivosinergiafitness.ui.activities.LoginActivity
 import com.example.clubdeportivosinergiafitness.ui.activities.UserActivity
@@ -18,11 +19,13 @@ import com.google.android.material.navigation.NavigationView
 open class BaseActivity : AppCompatActivity() {
 
     private lateinit var contentFrame: FrameLayout  // contenedor donde se insertará el contenido de cada pantalla hija
+    private lateinit var sessionManager: SessionManager // para manejar sesión usuario
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         super.setContentView(R.layout.activity_base) // carga la base
         contentFrame = findViewById(R.id.contentFrame) // referencia al FrameLayout donde irá el contenido dinámico
+        sessionManager = SessionManager(this)  // inicializo session manager
         configurarToolbar()
     }
 
@@ -64,12 +67,14 @@ open class BaseActivity : AppCompatActivity() {
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.itemUsuario -> {
-                    // Obtener usuario guardado en SharedPreferences para pasarlo al UserActivity
-                    val prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE)
-                    val usuario = prefs.getString("usuarioLogueado", "") ?: ""
+                    // Obtengo usuario y email guardados en session
+                    val usuario = sessionManager.getUsername() ?: ""
+                    val email = sessionManager.getEmail() ?: ""
 
                     val intent = Intent(this, UserActivity::class.java)
-                    intent.putExtra("usuario", usuario) // pasar el usuario actual
+                    // Paso usuario y email a UserActivity
+                    intent.putExtra("usuario", usuario)
+                    intent.putExtra("email", email)
                     startActivity(intent)
                 }
                 R.id.itemCambiarTema -> {
@@ -80,6 +85,10 @@ open class BaseActivity : AppCompatActivity() {
                     startActivity(Intent(this, AboutActivity::class.java))
                 }
                 R.id.itemCerrarSesion -> {
+                    // Limpio sesión antes de salir
+                    sessionManager.logout()
+
+                    // Abro Login y limpio stack de actividades
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     startActivity(intent)
@@ -92,6 +101,5 @@ open class BaseActivity : AppCompatActivity() {
 
             true
         }
-
     }
 }

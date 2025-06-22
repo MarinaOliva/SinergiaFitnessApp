@@ -7,10 +7,13 @@ import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.R
 import com.example.clubdeportivosinergiafitness.data.ClubDBHelper
+import com.example.clubdeportivosinergiafitness.data.SessionManager
 
 class UserActivity : BaseActivity() {
 
     private lateinit var dbHelper: ClubDBHelper
+    private lateinit var sessionManager: SessionManager
+
     private lateinit var etNombreApellido: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPassActual: EditText
@@ -18,13 +21,15 @@ class UserActivity : BaseActivity() {
     private lateinit var etRepPass: EditText
     private lateinit var btnCambiar: Button
 
-    private var nombreUsuario: String = "" // Recibido por Intent
+    private var nombreUsuario: String = ""
+    private var emailUsuario: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
 
         dbHelper = ClubDBHelper(this)
+        sessionManager = SessionManager(this)
 
         etNombreApellido = findViewById(R.id.editTextText)
         etEmail = findViewById(R.id.et_mail)
@@ -33,8 +38,9 @@ class UserActivity : BaseActivity() {
         etRepPass = findViewById(R.id.et_PassConfirmation)
         btnCambiar = findViewById(R.id.btn_Cambiar)
 
-        // Obtener usuario enviado por Intent
-        nombreUsuario = intent.getStringExtra("usuario") ?: ""
+        // Intent puede no traer datos, por eso primero intento obtenerlos del Intent
+        nombreUsuario = intent.getStringExtra("usuario") ?: sessionManager.getUsername() ?: ""
+        emailUsuario = intent.getStringExtra("email") ?: sessionManager.getEmail() ?: ""
 
         cargarDatosAdmin()
 
@@ -47,8 +53,8 @@ class UserActivity : BaseActivity() {
         val admin = dbHelper.obtenerDatosAdmin(nombreUsuario)
         if (admin != null) {
             etNombreApellido.setText(admin.nombreUsu.replace("_", " "))
-            etEmail.setText(admin.email ?: "")
-            etPassActual.setText("")
+            etEmail.setText(admin.email ?: emailUsuario) // si no hay email en db usa el recibido o guardado
+            etPassActual.setText("") // siempre vacío por seguridad
         } else {
             Toast.makeText(this, "Error al cargar datos del admin", Toast.LENGTH_SHORT).show()
         }
