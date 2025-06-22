@@ -1,6 +1,5 @@
 package com.example.clubdeportivosinergiafitness.ui.activities
 
-
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -18,35 +17,34 @@ class RegistrationActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
 
-        // Vinculamos los botones y el TextView
+        // Vinculamos vistas
         btnElegirActividad = findViewById(R.id.btnElegirActividad)
         btnAsociar = findViewById(R.id.btnAsociar)
         idSocioTextView = findViewById(R.id.IdSocio)
 
+        // Obtenemos el DNI y el estado de socio
+        val dni = intent.getStringExtra("dni_ingresado")
+        val esSocio = intent.getBooleanExtra("es_socio", false)
+
+        // Mostramos el resultado
+        idSocioTextView.text = if (esSocio) {
+            "El n° de documento ingresado pertenece a un: socio"
+        } else {
+            "El n° de documento ingresado pertenece a un: no socio"
+        }
+
         // Acción para botón Elegir Actividad
         btnElegirActividad.setOnClickListener {
             val intent = Intent(this, NonMemberActivity::class.java)
+            intent.putExtra("dni_ingresado", dni)
             startActivity(intent)
         }
 
         // Acción para botón Asociar
         btnAsociar.setOnClickListener {
             val intent = Intent(this, RegisterMemberActivity::class.java)
+            intent.putExtra("dni_ingresado", dni)
             startActivity(intent)
         }
-
-        // Obtenemos el DNI enviado desde la otra Activity
-        val dni = intent.getStringExtra("dni_ingresado")
-
-        // Verificamos que no sea null y simulamos la consulta
-        if (!dni.isNullOrEmpty()) {
-            simularConsultaSocio(dni)
-        }
-    }
-
-    private fun simularConsultaSocio(dni: String) {
-        val esSocio = dni == "12345678"
-        val resultado = if (esSocio) "socio" else "no socio"
-        idSocioTextView.text = "El n° de documento ingresado pertenece a un: $resultado"
     }
 }

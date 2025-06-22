@@ -19,7 +19,6 @@ class NonMemberActivity : BaseActivity() {
 
     private lateinit var binding: ActivityNonMemberBinding
     private lateinit var dbHelper: ClubDBHelper
-
     private var idActividadSeleccionada: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,44 +28,55 @@ class NonMemberActivity : BaseActivity() {
 
         dbHelper = ClubDBHelper(this)
 
+        // Configurar los spinners personalizados
         setupCustomSpinner(binding.spinnerActividad, R.array.actividades_array)
         setupCustomSpinner(binding.spinnerDocumento, R.array.tipo_documento_array)
 
+        // Recibir el DNI que fue ingresado en RegisterClientActivity
+        val dniRecibido = intent.getStringExtra("dni_ingresado")
+        if (!dniRecibido.isNullOrEmpty()) {
+            binding.editNumeroDocumento.setText(dniRecibido) // Autocompletar el campo
+            binding.editNumeroDocumento.isEnabled = false // Opcional: hacer que no se pueda editar
+        }
+
+        // Listener del spinner de actividades
         binding.spinnerActividad.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 val nombreActividad = parent.getItemAtPosition(position).toString()
                 Log.d("SpinnerDebug", "Seleccionaste: $nombreActividad")
 
                 if (position != 0) {
+                    // Obtener ID y monto de la actividad seleccionada
                     idActividadSeleccionada = dbHelper.obtenerIdActividadPorNombre(nombreActividad)
-                    Log.d("SpinnerDebug", "ID Actividad: $idActividadSeleccionada")
-
                     val monto = dbHelper.obtenerMontoActividadPorNombre(nombreActividad)
+
+                    Log.d("SpinnerDebug", "ID Actividad: $idActividadSeleccionada")
                     Log.d("SpinnerDebug", "Monto obtenido: $monto")
 
+                    // Mostrar el monto en pantalla si es válido
                     if (monto == 0.0) {
                         mostrarToast("No se encontró el monto de la actividad seleccionada")
-                        binding.editTextMonto.setText("")  // Limpia el campo monto si no hay monto válido
+                        binding.editTextMonto.setText("")
                         return
                     }
 
                     val montoFormateado = "$${String.format("%.2f", monto)}"
-                    Log.d("SpinnerDebug", "Monto formateado: $montoFormateado")
-
-                    // Seteamos el monto en el EditText no editable
                     binding.editTextMonto.setText(montoFormateado)
                 } else {
+                    // Si no se eligió actividad, limpiar el campo de monto
                     idActividadSeleccionada = -1
-                    binding.editTextMonto.setText("")  // Limpia monto si no se selecciona nada válido
+                    binding.editTextMonto.setText("")
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // Configurar botones de la pantalla
         setupButtons()
     }
 
+    // Configura los Spinners con diseño personalizado y primer ítem deshabilitado
     private fun setupCustomSpinner(spinner: Spinner, arrayResId: Int) {
         val items = resources.getStringArray(arrayResId).toList()
 
@@ -103,6 +113,7 @@ class NonMemberActivity : BaseActivity() {
         spinner.setSelection(0)
     }
 
+    // Configura los botones de cancelar y pagar
     private fun setupButtons() {
         binding.btnCancelar.setOnClickListener {
             startActivity(Intent(this, MenuPrincipalActivity::class.java))
@@ -116,7 +127,7 @@ class NonMemberActivity : BaseActivity() {
             val numDoc = binding.editNumeroDocumento?.text?.toString()?.trim()?.toIntOrNull() ?: -1
 
             if (nombre.isNotEmpty() && apellido.isNotEmpty() && numDoc != -1 && idActividadSeleccionada != -1) {
-                // Descontar cupo
+                // Intentar descontar cupo de la actividad
                 val exito = dbHelper.descontarCupoActividad(idActividadSeleccionada)
 
                 if (exito) {
@@ -143,6 +154,7 @@ class NonMemberActivity : BaseActivity() {
         }
     }
 
+    // Muestra un toast con el mensaje recibido
     private fun mostrarToast(mensaje: String) {
         Toast.makeText(this, mensaje, Toast.LENGTH_SHORT).show()
     }

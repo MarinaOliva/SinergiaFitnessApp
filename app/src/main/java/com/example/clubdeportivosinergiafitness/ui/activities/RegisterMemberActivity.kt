@@ -48,6 +48,10 @@ class RegisterMemberActivity : BaseActivity() {
         val fechaActual = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         tvFecha.text = fechaActual
 
+        // dni ya ingresado
+        val dni = intent.getStringExtra("dni_ingresado")
+        etDni.setText(dni)
+
         // Botón Registrar
         btnRegistrar.setOnClickListener {
             val nombre = etNombre.text.toString().trim()
