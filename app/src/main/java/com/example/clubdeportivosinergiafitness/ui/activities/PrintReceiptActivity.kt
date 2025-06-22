@@ -1,5 +1,6 @@
 package com.example.clubdeportivosinergiafitness.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
@@ -14,7 +15,7 @@ class PrintReceiptActivity : BaseActivity() {
         binding = ActivityPrintReceiptBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtener datos
+        // Obtener datos del intent
         val nombre = intent.getStringExtra("nombre") ?: "Desconocido"
         val dni = intent.getStringExtra("dni") ?: "Sin DNI"
         val monto = intent.getDoubleExtra("monto", 0.0)
@@ -22,7 +23,7 @@ class PrintReceiptActivity : BaseActivity() {
         val numeroRecibo = intent.getStringExtra("numeroRecibo") ?: "Sin número"
         val tieneRecargo = intent.getBooleanExtra("tieneRecargo", false)
 
-        // Mostrar datos
+        // Mostrar los datos en pantalla
         binding.tvNombre.text = "Nombre: $nombre"
         binding.tvDni.text = "DNI: $dni"
         binding.tvFechaPago.text = "Fecha de pago: $fechaPago"
@@ -35,9 +36,17 @@ class PrintReceiptActivity : BaseActivity() {
         }
         binding.tvMonto.text = textoMonto
 
-        // Botón imprimir (placeholder)
+        // Acción del botón "Imprimir"
         binding.btnImprimir.setOnClickListener {
             Toast.makeText(this, "Funcionalidad próximamente", Toast.LENGTH_SHORT).show()
+        }
+
+        // Acción del botón "Salir"
+        binding.btnSalir.setOnClickListener {
+            val intent = Intent(this, MenuPrincipalActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
         }
     }
 }

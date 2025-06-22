@@ -1,5 +1,6 @@
 package com.example.clubdeportivosinergiafitness.ui.activities
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
@@ -28,6 +29,14 @@ class RegisteredMemberActivity : BaseActivity() {
         // Botón de imprimir
         binding.btnImprimir.setOnClickListener {
             Toast.makeText(this, "Funcionalidad próximamente", Toast.LENGTH_SHORT).show()
+        }
+
+        // Botón de salir
+        binding.btnSalir.setOnClickListener {
+            val intent = Intent(this, MenuPrincipalActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
         }
     }
 }

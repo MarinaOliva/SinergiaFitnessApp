@@ -582,16 +582,22 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             .format(java.util.Date())
 
         val valores = ContentValues().apply {
-            put("socioID", socioID)
             put("fechaPago", fechaPago)
-            put("fechaVencimiento", fechaVencimiento)
             put("importe", importe)
         }
 
-        val resultado = db.insert("Cuota", null, valores)
+        // Actualizar la cuota existente que corresponde al socio y fecha de vencimiento, y que esté sin pagar (fechaPago IS NULL)
+        val filasActualizadas = db.update(
+            "Cuota",
+            valores,
+            "socioID = ? AND fechaVencimiento = ? AND fechaPago IS NULL",
+            arrayOf(socioID.toString(), fechaVencimiento)
+        )
+
         db.close()
-        return resultado != -1L
+        return filasActualizadas > 0
     }
+
 
     // FUNCION PARA EDITAR LAS ACTIVIDADES DEL SOCIO
     // funcion privada para obtener las act del socio
