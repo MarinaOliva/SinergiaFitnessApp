@@ -128,7 +128,7 @@ class RegisterMemberActivity : BaseActivity() {
             return false
         }
 
-        if (telefonoStr.length < 8 || telefonoStr.toIntOrNull() == null) {
+        if (telefonoStr.length < 11 || telefonoStr.toIntOrNull() == null) {
             Toast.makeText(this, "Teléfono inválido", Toast.LENGTH_SHORT).show()
             return false
         }

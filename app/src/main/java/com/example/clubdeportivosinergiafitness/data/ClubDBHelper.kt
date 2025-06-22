@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
 import android.util.Log
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
@@ -286,6 +287,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         }
         cursor.close()
 
+        // Verificar si ya es socio
         val cursorSocio = db.rawQuery(
             "SELECT socioID FROM Socio WHERE clienteID = ?",
             arrayOf(clienteID.toString())
@@ -296,6 +298,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         }
         cursorSocio.close()
 
+        // Insertar nuevo socio
         val fechaRegistro = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
 
         val socioValues = ContentValues().apply {
@@ -314,23 +317,21 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             Log.i("DBHelper", "Socio insertado con ID $socioID para clienteID $clienteID")
         }
 
+        // Eliminar si estaba en NoSocio
         db.delete("NoSocio", "clienteID = ?", arrayOf(clienteID.toString()))
 
-        val hoy = java.util.Calendar.getInstance()
-        val dia = hoy.get(java.util.Calendar.DAY_OF_MONTH)
-
-        val fechaVenc = java.util.Calendar.getInstance()
-        fechaVenc.set(java.util.Calendar.DAY_OF_MONTH, 10)
-
-// Si ya pasó el 10, la cuota vence el 10 del mes siguiente
-        if (dia > 10) {
-            fechaVenc.add(java.util.Calendar.MONTH, 1)
+        // Calcular fecha de vencimiento: siempre el 10 del mes actual
+        val fechaVenc = Calendar.getInstance().apply {
+            set(Calendar.DAY_OF_MONTH, 10)
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
+            set(Calendar.MILLISECOND, 0)
         }
 
-        val fechaVencimiento = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
-            .format(fechaVenc.time)
+        val fechaVencimiento = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(fechaVenc.time)
 
-
+        // Insertar cuota inicial
         val cuotaValues = ContentValues().apply {
             put("socioID", socioID)
             put("fechaVencimiento", fechaVencimiento)
@@ -346,6 +347,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
 
         return socioID
     }
+
 
 
     // FUNCION OBTENER DATOS DEL SOCIO
@@ -538,14 +540,9 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                 val fechaHoy = sdf.parse(sdf.format(java.util.Date()))
                 val fechaVto = sdf.parse(fechaVencimiento)
 
-                val importeFinal = if (fechaHoy.after(fechaVto)) {
-                    importeOriginal + 5000
-                } else {
-                    importeOriginal
-                }
-
                 val hoyTexto = sdf.format(java.util.Date())
-                DatosCuotaPago(nombreCompleto, socioID, importeFinal, fechaVencimiento, hoyTexto, fechaRegistro)
+                DatosCuotaPago(nombreCompleto, socioID, importeOriginal, fechaVencimiento, hoyTexto, fechaRegistro)
+
             }
         } else {
             null
@@ -636,7 +633,6 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         db.beginTransaction()
 
         try {
-            // Usamos la versión segura con la misma conexión
             val actuales = obtenerActividadesDelSocioDesde(db, socioID)
 
             val aEliminar = actuales.filter { it !in nuevasActividades }
@@ -728,29 +724,67 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         val lista = mutableListOf<CuotaVencida>()
 
         val query = """
-        SELECT s.socioID, c.nombre, c.apellido, cu.fechaVencimiento, cu.importe
+        SELECT s.socioID, c.nombre, c.apellido, cu.fechaVencimiento, cu.importe, s.fechaRegistro
         FROM Cuota cu
         JOIN Socio s ON cu.socioID = s.socioID
         JOIN Cliente c ON s.clienteID = c.clienteID
         WHERE cu.fechaPago IS NULL
-        AND date(cu.fechaVencimiento) < date('now')
+          AND date(cu.fechaVencimiento) < date('now')
+          AND date(s.fechaRegistro) < date(cu.fechaVencimiento)
     """.trimIndent()
 
         val cursor = db.rawQuery(query, null)
+        val formatoFecha = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+        val recargo = 5000.0
+
         while (cursor.moveToNext()) {
-            val cuota = CuotaVencida(
-                idSocio = cursor.getInt(0),
-                nombre = cursor.getString(1),
-                apellido = cursor.getString(2),
-                fechaVencimiento = cursor.getString(3),
-                importe = cursor.getDouble(4)
+            val idSocio = cursor.getInt(0)
+            val nombre = cursor.getString(1)
+            val apellido = cursor.getString(2)
+            val fechaVencimientoStr = cursor.getString(3)
+            val importeOriginal = cursor.getDouble(4)
+            val fechaRegistroStr = cursor.getString(5)
+
+            val fechaVencimiento = formatoFecha.parse(fechaVencimientoStr)
+            val fechaRegistro = formatoFecha.parse(fechaRegistroStr)
+
+            var importeFinal = importeOriginal
+
+            if (fechaVencimiento != null && fechaRegistro != null) {
+                val calVenc = Calendar.getInstance().apply { time = fechaVencimiento }
+                val calReg = Calendar.getInstance().apply { time = fechaRegistro }
+
+                val diaRegistro = calReg.get(Calendar.DAY_OF_MONTH)
+                val mismoMes = calVenc.get(Calendar.MONTH) == calReg.get(Calendar.MONTH)
+                val mismoAnio = calVenc.get(Calendar.YEAR) == calReg.get(Calendar.YEAR)
+
+                // Aplica recargo solo si se registró antes del día 10 del mes y año de vencimiento
+                if (mismoMes && mismoAnio && diaRegistro < 10) {
+                    importeFinal += recargo
+                }
+                // También si el socio se registró en un mes anterior, aplica recargo
+                else if (!mismoMes || !mismoAnio) {
+                    importeFinal += recargo
+                }
+                // Caso contrario (registro después del día 10 del mismo mes) NO aplica recargo
+            }
+
+            lista.add(
+                CuotaVencida(
+                    idSocio = idSocio,
+                    nombre = nombre,
+                    apellido = apellido,
+                    fechaVencimiento = fechaVencimientoStr,
+                    importe = importeFinal
+                )
             )
-            lista.add(cuota)
         }
         cursor.close()
         db.close()
         return lista
     }
+
+
 
     // FUNCION OBTENER DATOS DEL ADMIN (a partir del nombre de usuario)
     fun obtenerDatosAdmin(nombreUsuario: String): AdminDatos? {

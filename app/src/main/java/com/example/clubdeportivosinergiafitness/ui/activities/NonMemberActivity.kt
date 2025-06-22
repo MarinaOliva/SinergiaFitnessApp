@@ -36,7 +36,7 @@ class NonMemberActivity : BaseActivity() {
         val dniRecibido = intent.getStringExtra("dni_ingresado")
         if (!dniRecibido.isNullOrEmpty()) {
             binding.editNumeroDocumento.setText(dniRecibido) // Autocompletar el campo
-            binding.editNumeroDocumento.isEnabled = false // Opcional: hacer que no se pueda editar
+            binding.editNumeroDocumento.isEnabled = false
         }
 
         // Listener del spinner de actividades

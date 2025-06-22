@@ -21,8 +21,6 @@ class PayFeeActivity : BaseActivity() {
     private lateinit var fechaVencimiento: String
     private lateinit var fechaRegistro: String
 
-    private val recargo = 5000.0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPayFeeBinding.inflate(layoutInflater)
@@ -45,39 +43,41 @@ class PayFeeActivity : BaseActivity() {
             return
         }
 
-        // Parsear fechas
+// Parsear fechas
         val formatoFecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         val hoy = Calendar.getInstance().time
-
         val fechaVenDate = try { formatoFecha.parse(fechaVencimiento) } catch (e: Exception) { null }
         val fechaRegDate = try { formatoFecha.parse(fechaRegistro) } catch (e: Exception) { null }
 
-        // Calcular si la cuota está vencida (fecha vencimiento anterior a hoy)
+// Calcular si la cuota está vencida
         val vencida = fechaVenDate?.before(hoy) ?: false
 
-        // Lógica del recargo ajustada según fecha de registro
+// Calcular si aplica recargo
         val aplicaRecargo = if (vencida && fechaRegDate != null && fechaVenDate != null) {
             val calVenc = Calendar.getInstance().apply { time = fechaVenDate }
             val calReg = Calendar.getInstance().apply { time = fechaRegDate }
 
             val mismoMes = calVenc.get(Calendar.MONTH) == calReg.get(Calendar.MONTH)
             val mismoAnio = calVenc.get(Calendar.YEAR) == calReg.get(Calendar.YEAR)
-            val registradoPost10 = calReg.get(Calendar.DAY_OF_MONTH) > 10
+            val diaRegistro = calReg.get(Calendar.DAY_OF_MONTH)
 
-            // Si se registró después del 10 del mismo mes y año de la cuota vencida, NO aplica recargo
-            !(mismoMes && mismoAnio && registradoPost10)
+            // Aplica recargo salvo que sea mismo mes y registrado después del día 10
+            !(mismoMes && mismoAnio && diaRegistro > 10)
         } else {
             false
         }
 
+        val recargo = 5000.0
         val importeFinal = if (aplicaRecargo) importe + recargo else importe
 
-        // Mostrar en pantalla
+// Mostrar en pantalla
         val leyendaImporte = if (aplicaRecargo) {
-            "Importe cuota: $%.2f (+ $5000 por pago vencido)".format(importe)
+            "Importe cuota: $%.2f (incluye $5000 de intereses por mora)".format(importeFinal)
         } else {
-            "Importe cuota: $%.2f".format(importe)
+            "Importe cuota: $%.2f".format(importeFinal)
         }
+
+
 
         binding.nombreTextView.text = "Nombre: $nombreCompleto"
         binding.numeroTextView.text = "Número: $socioID"
