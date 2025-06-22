@@ -55,6 +55,7 @@ class CheckFeeActivity : BaseActivity() {
                             putExtra("importe", datos.importe)
                             putExtra("fechaPago", datos.fechaPago)
                             putExtra("fechaVencimiento", datos.fechaVencimiento)
+                            putExtra("fechaRegistro", datos.fechaRegistro)
                         }
                         startActivity(intent)
                     } else {

@@ -5,6 +5,10 @@ import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import android.content.ContentValues
 import android.util.Log
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 
 data class SocioDatos(
     val nombre: String,
@@ -37,6 +41,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             telefono INTEGER,
             email TEXT,
             presentaAptoFisico INTEGER,
+            fechaRegistro TEXT,
             FOREIGN KEY (clienteID) REFERENCES Cliente(clienteID)
         );
         """.trimIndent()
@@ -122,13 +127,13 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         // Insertar Socios
         db.execSQL(
             """
-        INSERT INTO Socio (clienteID, telefono, email, presentaAptoFisico) VALUES
-        (1, 11223344, 'martin.gonzalez@yahoo.com', 1),
-        (2, 22334455, 'lucia.lopez@gmail.com', 1),
-        (4, 56677899, 'sofia.martinez@live.com', 1),
-        (6, 78899001, 'carlos.ramirez@gmail.com', 1),
-        (7, 99001122, 'ana.garcia@yahoo.com', 1),
-        (8, 90011222, 'miguel.torres@hotmail.com', 1);
+     INSERT INTO Socio (clienteID, telefono, email, presentaAptoFisico, fechaRegistro) VALUES
+    (1, 11223344, 'martin.gonzalez@yahoo.com', 1, '2025-05-01'),
+    (2, 22334455, 'lucia.lopez@gmail.com', 1, '2025-02-05'),
+    (4, 56677899, 'sofia.martinez@live.com', 1, '2025-05-09'),
+    (6, 78899001, 'carlos.ramirez@gmail.com', 1, '2025-05-12'),
+    (7, 99001122, 'ana.garcia@yahoo.com', 1, '2025-03-15'),
+    (8, 90011222, 'miguel.torres@hotmail.com', 1, '2025-04-22');
     """.trimIndent()
         )
 
@@ -291,11 +296,14 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         }
         cursorSocio.close()
 
+        val fechaRegistro = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+
         val socioValues = ContentValues().apply {
             put("clienteID", clienteID)
             put("telefono", telefono)
             put("email", email)
             put("presentaAptoFisico", if (presentaApto) 1 else 0)
+            put("fechaRegistro", fechaRegistro)
         }
 
         val socioID = db.insert("Socio", null, socioValues)
@@ -490,8 +498,10 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         val socioID: Int,
         val importe: Double,
         val fechaVencimiento: String,
-        val fechaPago: String
+        val fechaPago: String,
+        val fechaRegistro: String
     )
+
 
     fun obtenerDatosParaPago(numSocio: Int): DatosCuotaPago? {
         val db = readableDatabase
@@ -500,7 +510,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                s.socioID,
                cu.importe,
                cu.fechaVencimiento,
-               cu.fechaPago
+               cu.fechaPago,
+               s.fechaRegistro
         FROM Socio s
         JOIN Cliente c ON s.clienteID = c.clienteID
         JOIN Cuota cu ON cu.socioID = s.socioID
@@ -516,6 +527,8 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
             val importeOriginal = cursor.getDouble(2)
             val fechaVencimiento = cursor.getString(3)
             val fechaPago = cursor.getString(4) // puede ser null
+            val fechaRegistro = cursor.getString(5)
+
 
             // Si ya está pagada, no hay nada que pagar
             if (!fechaPago.isNullOrEmpty()) {
@@ -532,7 +545,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
                 }
 
                 val hoyTexto = sdf.format(java.util.Date())
-                DatosCuotaPago(nombreCompleto, socioID, importeFinal, fechaVencimiento, hoyTexto)
+                DatosCuotaPago(nombreCompleto, socioID, importeFinal, fechaVencimiento, hoyTexto, fechaRegistro)
             }
         } else {
             null
@@ -701,7 +714,7 @@ class ClubDBHelper(context: Context) : SQLiteOpenHelper(context, "ClubDB", null,
         return cupo
     }
 
- // FUNCION OBTENER CUOTAS VENCIDAS
+    // FUNCION OBTENER CUOTAS VENCIDAS
     data class CuotaVencida(
         val idSocio: Int,
         val nombre: String,
