@@ -44,6 +44,7 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             app:layout_constraintStart_toEndOf="@id/ic_user"
             app:layout_constraintTop_toTopOf="@id/ic_user"
             app:layout_constraintEnd_toStartOf="@id/etApellido" />
@@ -59,7 +60,6 @@
             android:background="@drawable/edit_text_layer"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:layout_marginStart="8dp"
             android:layout_marginEnd="24dp"
             app:layout_constraintTop_toTopOf="@id/etNombre"
             app:layout_constraintStart_toEndOf="@id/etNombre"
@@ -155,7 +155,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="84dp"
             android:text="@string/presenta_apto_f_sico"
-            android:textColor="#FFA500"
+            android:textColor="@color/boton_cerrar_sesion"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -177,23 +177,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sí"
-                android:textColor="#FFA500"
+                android:textColor="@color/boton_cerrar_sesion"
                 android:textSize="24sp"
                 android:layout_marginEnd="16dp"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:buttonTint="#FFFFFF" />
 
             <RadioButton
                 android:id="@+id/rbNo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="No"
-                android:textColor="#FFA500"
+                android:textColor="@color/boton_cerrar_sesion"
                 android:textSize="24sp"
                 android:minWidth="48dp"
                 android:minHeight="48dp"
-                android:padding="8dp" />
+                android:padding="8dp"
+                android:buttonTint="#FFFFFF" />
         </RadioGroup>
 
         <ImageView

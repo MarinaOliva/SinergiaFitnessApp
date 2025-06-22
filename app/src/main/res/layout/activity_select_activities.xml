@@ -2,8 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textAlignment="center">
+    android:layout_height="match_parent">
 
     <!-- Título -->
     <TextView
@@ -14,114 +13,117 @@
         android:layout_marginTop="24dp"
         android:text="Seleccionar actividades de este mes"
         android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Subtítulo -->
     <TextView
         android:id="@+id/tv_SelectionActivity"
         style="@style/AppTitleText"
+        android:textColor="@color/boton_cerrar_sesion"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:text="Seleccione hasta 3 actividades"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_TituloSeleccion" />
-
-    <!-- Primera fila -->
-
-    <!-- Segunda fila -->
-
-    <!-- Tercera fila -->
-
-    <!-- Botones Confirmar y Cancelar -->
-
-    <CheckBox
-        android:id="@+id/cb_Zumba"
-        style="@style/AppTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
-        android:text="Zumba"
-        android:textAllCaps="true"
+        android:text="Seleccione hasta 3 actividades"
+        android:textSize="22sp"
+        app:layout_constraintTop_toBottomOf="@id/tv_TituloSeleccion"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Guidelines para columnas -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical" />
+
+    <!-- Fila 1 -->
+    <CheckBox
+        android:id="@+id/cb_Aikido"
+        android:textColor="@color/boton_cerrar_sesion"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_Pilates" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="32dp"
+        android:text="Aikido"
+        android:buttonTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <CheckBox
         android:id="@+id/cb_Yoga"
-        style="@style/AppTitleText"
+        android:textColor="@color/boton_cerrar_sesion"
+        android:textSize="24sp"
+        android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginStart="32dp"
         android:text="Yoga"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/cb_Aikido"
-        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity" />
+        android:buttonTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity"
+        app:layout_constraintStart_toStartOf="@id/guideline_50" />
 
-    <CheckBox
-        android:id="@+id/cb_Tela"
-        style="@style/AppTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="32dp"
-        android:text="Tela"
-        android:textAlignment="center"
-        android:textAllCaps="true"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/cb_Pilates"
-        app:layout_constraintTop_toBottomOf="@id/cb_Yoga" />
-
+    <!-- Fila 2 -->
     <CheckBox
         android:id="@+id/cb_Pilates"
-        style="@style/AppTitleText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:text="Pilates"
-        android:textAlignment="center"
-        android:textAllCaps="true"
+        android:textColor="@color/boton_cerrar_sesion"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_Aikido" />
-
-    <CheckBox
-        android:id="@+id/cb_Aikido"
-        style="@style/AppTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
-        android:text="Aikido"
-        android:textAllCaps="true"
+        android:text="Pilates"
+        android:buttonTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/cb_Aikido"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <CheckBox
+        android:id="@+id/cb_Zumba"
+        android:textColor="@color/boton_cerrar_sesion"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_SelectionActivity" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:text="Zumba"
+        android:buttonTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/cb_Yoga"
+        app:layout_constraintStart_toStartOf="@id/guideline_50" />
 
+    <!-- Fila 3 -->
+    <CheckBox
+        android:id="@+id/cb_Tela"
+        android:textColor="@color/boton_cerrar_sesion"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
+        android:text="Tela"
+        android:buttonTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@id/cb_Pilates"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Botones -->
     <LinearLayout
         android:id="@+id/ll_Botones"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="116dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@id/cb_Tela"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cb_Zumba">
+        app:layout_constraintEnd_toEndOf="parent">
 
         <Button
             android:id="@+id/btn_ConfirmarSeleccion"
@@ -129,7 +131,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:gravity="center"
             android:text="Confirmar"
             android:textAppearance="@style/PrimaryButtonText" />
 
@@ -137,7 +138,7 @@
             android:id="@+id/btn_CancelarSeleccion"
             style="@style/PrimaryButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_margin="16dp"
             android:text="Cancelar"
             android:textAppearance="@style/PrimaryButtonText" />

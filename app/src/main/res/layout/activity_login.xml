@@ -100,5 +100,6 @@
         android:drawablePadding="1dp"
         android:gravity="center"
         android:text="Ingresar"
+        android:layout_marginStart="25dp"
         android:textAppearance="@style/PrimaryButtonText" />
-    </LinearLayout>
+</LinearLayout>

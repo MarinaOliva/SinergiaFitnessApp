@@ -72,7 +72,7 @@
 
                 <TextView
                     style="@style/MenuButtonText"
-                    android:text="Inscribir en \nactividades guiadas" />
+                    android:text="Inscribir socio en \nactividades guiadas" />
 
             </LinearLayout>
 
@@ -84,7 +84,8 @@
 
                 <ImageView
                     style="@style/MenuButtonIcon"
-                    android:src="@drawable/ic_clock" />
+                    android:src="@drawable/ic_clock"
+                    />
 
                 <TextView
                     style="@style/MenuButtonText"
@@ -103,7 +104,9 @@
 
         <TextView
             style="@style/PrimaryButtonText"
-            android:text="Cerrar Sesión" />
+            android:layout_width="184dp"
+            android:text="Cerrar Sesión"
+            android:textSize="23dp"/>
 
         <ImageView
             style="@style/CerrarSesionIcon"

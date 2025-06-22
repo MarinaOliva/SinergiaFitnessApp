@@ -21,7 +21,7 @@
     <!-- Campo de número de socio -->
     <EditText
         android:id="@+id/numeroSocioEditText"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="48dp"
         android:background="@drawable/edit_text_layer"
         android:inputType="number"
@@ -40,7 +40,7 @@
     <Button
         android:id="@+id/consultarButton"
         style="@style/PrimaryButtonStyle"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="65dp"
         android:drawablePadding="1dp"
         android:gravity="center"
