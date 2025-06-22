@@ -130,13 +130,14 @@
                 android:scrollbarFadeDuration="250"
                 app:srcCompat="@drawable/ic_key" />
 
-            <TextView
+            <EditText
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_layer"
                 android:padding="8dp"
-                android:text="   Contraseña actual"
+                android:hint="   Contraseña actual"
+                android:inputType="textPassword"
                 android:textAlignment="center"
                 android:textColor="@color/hint_color"
                 android:textColorHint="@color/hint_color"
@@ -169,11 +170,12 @@
                 android:layout_height="49dp"
                 android:background="@drawable/edit_text_layer"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:padding="8dp"
-                android:text="Nueva contraseña"
+                android:hint="Nueva contraseña"
                 android:textAlignment="center"
                 android:textColor="@color/hint_color"
+                android:textColorHint="@color/hint_color"
                 android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -203,11 +205,12 @@
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_layer"
                 android:ems="10"
-                android:inputType="text"
+                android:inputType="textPassword"
                 android:padding="8dp"
-                android:text="Repetir nuevamente contraseña"
+                android:hint="Repetir nuevamente contraseña"
                 android:textAlignment="center"
                 android:textColor="@color/hint_color"
+                android:textColorHint="@color/hint_color"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>

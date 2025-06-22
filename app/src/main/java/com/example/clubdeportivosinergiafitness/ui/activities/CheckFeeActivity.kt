@@ -31,19 +31,36 @@ class CheckFeeActivity : BaseActivity() {
                 return@setOnClickListener
             }
 
-            val datos = dbHelper.obtenerDatosParaPago(numSocioText.toInt())
+            val socioID = numSocioText.toInt()
+            val estado = dbHelper.verificarEstadoCuotas(socioID)
 
-            if (datos != null) {
-                val intent = Intent(this, PayFeeActivity::class.java).apply {
-                    putExtra("nombreCompleto", datos.nombreCompleto)
-                    putExtra("socioID", datos.socioID)
-                    putExtra("importe", datos.importe)
-                    putExtra("fechaPago", datos.fechaPago)
-                    putExtra("fechaVencimiento", datos.fechaVencimiento)
+            when (estado) {
+                0 -> {
+                    Toast.makeText(this, "Socio no encontrado", Toast.LENGTH_LONG).show()
                 }
-                startActivity(intent)
-            } else {
-                Toast.makeText(this, "Socio no encontrado o sin cuotas registradas", Toast.LENGTH_LONG).show()
+                1 -> {
+                    Toast.makeText(this, "Este socio no tiene cuotas registradas", Toast.LENGTH_LONG).show()
+                }
+                2 -> {
+                    Toast.makeText(this, "Este socio ya tiene todas las cuotas pagadas", Toast.LENGTH_LONG).show()
+                }
+                3 -> {
+                    // Socio válido y con al menos una cuota impaga
+                    val datos = dbHelper.obtenerDatosParaPago(socioID)
+
+                    if (datos != null) {
+                        val intent = Intent(this, PayFeeActivity::class.java).apply {
+                            putExtra("nombreCompleto", datos.nombreCompleto)
+                            putExtra("socioID", datos.socioID)
+                            putExtra("importe", datos.importe)
+                            putExtra("fechaPago", datos.fechaPago)
+                            putExtra("fechaVencimiento", datos.fechaVencimiento)
+                        }
+                        startActivity(intent)
+                    } else {
+                        Toast.makeText(this, "Error al obtener datos de pago", Toast.LENGTH_LONG).show()
+                    }
+                }
             }
         }
     }

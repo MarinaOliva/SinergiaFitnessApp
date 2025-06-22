@@ -1,19 +1,19 @@
 package com.example.clubdeportivosinergiafitness
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.core.view.GravityCompat
-import android.content.Intent
 import android.widget.Toast
-import com.example.clubdeportivosinergiafitness.ui.activities.UserActivity
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.example.clubdeportivosinergiafitness.ui.activities.AboutActivity
 import com.example.clubdeportivosinergiafitness.ui.activities.LoginActivity
-
+import com.example.clubdeportivosinergiafitness.ui.activities.UserActivity
+import com.google.android.material.navigation.NavigationView
 
 open class BaseActivity : AppCompatActivity() {
 
@@ -60,11 +60,17 @@ open class BaseActivity : AppCompatActivity() {
         }
 
         // Configuración del menú lateral
-        val navigationView = findViewById<com.google.android.material.navigation.NavigationView>(R.id.navigationView)
+        val navigationView = findViewById<NavigationView>(R.id.navigationView)
         navigationView.setNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.itemUsuario -> {
-                    startActivity(Intent(this, UserActivity::class.java))
+                    // Obtener usuario guardado en SharedPreferences para pasarlo al UserActivity
+                    val prefs = getSharedPreferences("MisPreferencias", MODE_PRIVATE)
+                    val usuario = prefs.getString("usuarioLogueado", "") ?: ""
+
+                    val intent = Intent(this, UserActivity::class.java)
+                    intent.putExtra("usuario", usuario) // pasar el usuario actual
+                    startActivity(intent)
                 }
                 R.id.itemCambiarTema -> {
                     // TODO: Implementar cambio de tema más adelante

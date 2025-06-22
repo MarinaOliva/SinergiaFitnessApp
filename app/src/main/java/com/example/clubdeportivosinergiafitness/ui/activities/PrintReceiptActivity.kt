@@ -5,7 +5,6 @@ import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.databinding.ActivityPrintReceiptBinding
 
-
 class PrintReceiptActivity : BaseActivity() {
 
     private lateinit var binding: ActivityPrintReceiptBinding
@@ -15,22 +14,28 @@ class PrintReceiptActivity : BaseActivity() {
         binding = ActivityPrintReceiptBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Obtener datos del Intent
+        // Obtener datos
         val nombre = intent.getStringExtra("nombre") ?: "Desconocido"
         val dni = intent.getStringExtra("dni") ?: "Sin DNI"
         val monto = intent.getDoubleExtra("monto", 0.0)
         val fechaPago = intent.getStringExtra("fechaPago") ?: "Sin fecha"
         val numeroRecibo = intent.getStringExtra("numeroRecibo") ?: "Sin número"
+        val tieneRecargo = intent.getBooleanExtra("tieneRecargo", false)
 
-        // Asignar los datos a los TextViews
+        // Mostrar datos
         binding.tvNombre.text = "Nombre: $nombre"
         binding.tvDni.text = "DNI: $dni"
-        binding.tvMonto.text = "Monto: \$${String.format("%.2f", monto)}"
         binding.tvFechaPago.text = "Fecha de pago: $fechaPago"
         binding.tvNumeroRecibo.text = "Número de recibo: $numeroRecibo"
 
-        // Botón de imprimir
-        // TODO: Implementar la lógica para imprimir el recibo o guardar imagen
+        val textoMonto = if (tieneRecargo) {
+            "Monto: \$%.2f (incluye $5000 de interés por atraso)".format(monto)
+        } else {
+            "Monto: \$%.2f".format(monto)
+        }
+        binding.tvMonto.text = textoMonto
+
+        // Botón imprimir (placeholder)
         binding.btnImprimir.setOnClickListener {
             Toast.makeText(this, "Funcionalidad próximamente", Toast.LENGTH_SHORT).show()
         }

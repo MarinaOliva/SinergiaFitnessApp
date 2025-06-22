@@ -6,6 +6,8 @@ import android.widget.Toast
 import com.example.clubdeportivosinergiafitness.BaseActivity
 import com.example.clubdeportivosinergiafitness.data.ClubDBHelper
 import com.example.clubdeportivosinergiafitness.databinding.ActivityPayFeeBinding
+import java.text.SimpleDateFormat
+import java.util.*
 
 class PayFeeActivity : BaseActivity() {
 
@@ -17,6 +19,8 @@ class PayFeeActivity : BaseActivity() {
     private var importe: Double = 0.0
     private lateinit var fechaPago: String
     private lateinit var fechaVencimiento: String
+
+    private val recargo = 5000.0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,16 +36,34 @@ class PayFeeActivity : BaseActivity() {
         fechaPago = intent.getStringExtra("fechaPago") ?: ""
         fechaVencimiento = intent.getStringExtra("fechaVencimiento") ?: ""
 
+        // Verificación mínima de datos recibidos
         if (socioID == -1 || nombreCompleto.isBlank()) {
             Toast.makeText(this, "Datos del socio no recibidos", Toast.LENGTH_SHORT).show()
             finish()
             return
         }
 
-        // Mostrar los datos en pantalla
+        // Determinar si la cuota está vencida
+        val formatoFecha = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val hoy = Calendar.getInstance().time
+        val fechaVen = try {
+            formatoFecha.parse(fechaVencimiento)
+        } catch (e: Exception) {
+            null
+        }
+
+        val vencida = fechaVen?.before(hoy) ?: false
+
+        // Mostrar los datos en pantalla con leyenda si está vencida
+        val leyendaImporte = if (vencida) {
+            "Importe cuota: $%.2f (+ $5000 por pago vencido)".format(importe)
+        } else {
+            "Importe cuota: $%.2f".format(importe)
+        }
+
         binding.nombreTextView.text = "Nombre: $nombreCompleto"
         binding.numeroTextView.text = "Número: $socioID"
-        binding.importeTextView.text = "Importe cuota: $%.2f".format(importe)
+        binding.importeTextView.text = leyendaImporte
         binding.fechaPagoTextView.text = "Fecha de pago: $fechaPago"
         binding.fechaVencimientoTextView.text = "Fecha de vencimiento: $fechaVencimiento"
 
@@ -53,13 +75,19 @@ class PayFeeActivity : BaseActivity() {
 
         // Botón pagar
         binding.btnPagar.setOnClickListener {
-            val exito = dbHelper.registrarPagoCuota(socioID, importe, fechaVencimiento)
+            val socioDatos = dbHelper.obtenerDatosSocioPorID(socioID)
+            val dniReal = socioDatos?.numDoc?.toString() ?: "Sin DNI"
+
+            // Ajustar importe si está vencida
+            val importeFinal = if (vencida) importe + recargo else importe
+
+            val exito = dbHelper.registrarPagoCuota(socioID, importeFinal, fechaVencimiento)
             if (exito) {
                 val numeroRecibo = "REC-${System.currentTimeMillis()}"
                 val intent = Intent(this, PrintReceiptActivity::class.java).apply {
                     putExtra("nombre", nombreCompleto)
-                    putExtra("dni", socioID.toString()) // Lo adaptamos como "dni" aunque sea ID
-                    putExtra("monto", importe)
+                    putExtra("dni", dniReal) // DNI real
+                    putExtra("monto", importeFinal)
                     putExtra("fechaPago", fechaPago)
                     putExtra("numeroRecibo", numeroRecibo)
                 }
